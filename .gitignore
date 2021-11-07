@@ -105,4 +105,4 @@ dist
 
 # Storage test
 .storage
-.products
+.products*
