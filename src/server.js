@@ -10,6 +10,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
 
+app.use((req, res) => {
+  console.log();
+  res.json({
+    error: -2,
+    description: `Route ${req.url} not implemented`,
+  });
+});
+
 const PORT = process.env.PORT || 8080;
 
 const server = app.listen(PORT, () => {
