@@ -3,8 +3,8 @@ import fs from 'fs';
 class Container {
   constructor(fileName) {
     this.fileName = fileName;
-    const nombres = fs.readdirSync(__dirname);
-    if (nombres.indexOf(fileName) == -1) {
+    const names = fs.readdirSync(process.cwd());
+    if (names.indexOf(fileName) == -1) {
       fs.writeFileSync(fileName, '');
     }
   }
@@ -46,12 +46,15 @@ class Container {
     newObject.id = object.id;
 
     content.push(newObject);
+
     const json = JSON.stringify(content, null, 4);
     try {
-      await fs.promises.writeFile(this.nombreArchivo, json, 'utf-8');
+      await fs.promises.writeFile(this.fileName, json, 'utf-8');
     } catch (err) {
       console.log(err);
     }
+
+    object = await this.getById(newObject.id);
 
     return object ? object : [];
   }
