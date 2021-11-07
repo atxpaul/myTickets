@@ -11,7 +11,6 @@ app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
 
 app.use((req, res) => {
-  console.log();
   res.json({
     error: -2,
     description: `Route ${req.url} not implemented`,
