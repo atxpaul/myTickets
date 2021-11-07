@@ -24,6 +24,7 @@ class ProductController {
     if (config.isAdmin) {
       const storage = new container('.products');
       const product = req.body;
+      product.timestamp = Date.now();
       const id = await storage.save(product);
       if (id) {
         return res.json(await storage.getById(id));
