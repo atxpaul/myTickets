@@ -21,5 +21,8 @@
   "homepage": "https://github.com/atxpaul/myTickets#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "engines": {
+    "node": "16.12.0"
   }
 }
