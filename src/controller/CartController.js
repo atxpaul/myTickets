@@ -5,7 +5,7 @@ class CartController {
 
   async createNewCart(req, res) {
     const storage = new container('.carts');
-    const id = await storage.save({ timestamp: Date.now() });
+    const id = await storage.save({ timestamp: Date.now(), products: [] });
     if (id) {
       return res.json(id);
     } else {
@@ -45,16 +45,19 @@ class CartController {
 
   async addProductsToCart(req, res) {
     const storage = new container('.carts');
+    const products = new container('.products');
 
     const id = Number(req.params.id);
-    const newProductsId = req.body;
+    const newProductId = Number(req.body.productId);
     const cart = await storage.getById(id);
+    const product = await products.getById(newProductId);
+    console.log(newProductId, product);
 
-    if (newProductsId.length > 0) {
+    if (product.id) {
       if (cart.products) {
-        cart.products.push(...newProductsId);
+        cart.products.push(newProductId);
       } else {
-        cart.products = newProductsId;
+        cart.products = newProductId;
       }
 
       const newCart = await storage.updateById(id, cart);
