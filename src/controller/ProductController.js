@@ -2,32 +2,32 @@ import container from '../persistence/container.js';
 import config from '../config/config.js';
 
 class ProductController {
-  constructor() {}
+  constructor() {
+    this.storage = new container('.products');
+  }
 
-  async getProducts(req, res) {
-    const storage = new container('.products');
+  getProducts = async (req, res) => {
     if (req.params.id) {
       const id = req.params.id;
-      const product = await storage.getById(id);
+      const product = await this.storage.getById(id);
       if (product && product.length != 0) {
         return res.json(product);
       } else {
         return res.json({ error: 'Product not found' });
       }
     } else {
-      const products = await storage.getAll();
+      const products = await this.storage.getAll();
       return res.json(products);
     }
-  }
+  };
 
-  async addNewProduct(req, res) {
+  addNewProduct = async (req, res) => {
     if (config.isAdmin) {
-      const storage = new container('.products');
       const product = req.body;
       product.timestamp = Date.now();
-      const id = await storage.save(product);
+      const id = await this.storage.save(product);
       if (id) {
-        return res.json(await storage.getById(id));
+        return res.json(await this.storage.getById(id));
       } else {
         return res.json({ error: 'Error on saving product' });
       }
@@ -37,14 +37,13 @@ class ProductController {
         description: 'route post method addNewProduct not authorized',
       });
     }
-  }
+  };
 
-  async updateProductById(req, res) {
+  updateProductById = async (req, res) => {
     if (config.isAdmin) {
-      const storage = new container('.products');
       const id = Number(req.params.id);
       const product = req.body;
-      const updatedProduct = await storage.updateById(id, product);
+      const updatedProduct = await this.storage.updateById(id, product);
       if (updatedProduct) {
         return res.json(updatedProduct);
       } else {
@@ -56,15 +55,14 @@ class ProductController {
         description: 'route put method updateProductById not authorized',
       });
     }
-  }
+  };
 
-  async deleteProductById(req, res) {
+  deleteProductById = async (req, res) => {
     if (config.isAdmin) {
-      const storage = new container('.products');
       const id = Number(req.params.id);
-      const productToDelete = await storage.getById(id);
+      const productToDelete = await this.storage.getById(id);
       if (productToDelete) {
-        await storage.deleteById(id);
+        await this.storage.deleteById(id);
         return res.json(productToDelete);
       } else {
         return res.json({ error: 'Product to delete does not exists' });
@@ -75,7 +73,7 @@ class ProductController {
         description: 'route delete method deleteProductById not authorized',
       });
     }
-  }
+  };
 }
 
 export default ProductController;
