@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-class Container {
+class FileContainer {
   constructor(fileName) {
     this.fileName = fileName;
     const names = fs.readdirSync(process.cwd());
@@ -103,4 +103,4 @@ class Container {
   }
 }
 
-export default Container;
+export default FileContainer;

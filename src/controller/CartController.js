@@ -1,13 +1,10 @@
-import container from '../persistence/container.js';
+import { cartDao, productDao } from '../dao/index.js';
 
 class CartController {
-  constructor() {
-    this.storage = new container('.carts');
-    this.products = new container('.products');
-  }
+  constructor() {}
 
   createNewCart = async (req, res) => {
-    const id = await this.storage.save({ timestamp: Date.now(), products: [] });
+    const id = await cartDao.save({ timestamp: Date.now(), products: [] });
     if (id) {
       return res.json(id);
     } else {
@@ -17,9 +14,9 @@ class CartController {
 
   deleteCartById = async (req, res) => {
     const id = Number(req.params.id);
-    const cartToDelete = await this.storage.getById(id);
+    const cartToDelete = await cartDao.getById(id);
     if (cartToDelete) {
-      await storage.deleteById(id);
+      await cartDao.deleteById(id);
       return res.json(cartToDelete);
     } else {
       return res.json({ error: 'Product to delete does not exists' });
@@ -29,12 +26,12 @@ class CartController {
   getProductsByCart = async (req, res) => {
     const id = Number(req.params.id);
 
-    const cartContent = await this.storage.getById(id);
+    const cartContent = await cartDao.getById(id);
     const cartProductsId = cartContent.products;
 
     const cartProductsDetailed = [];
     for (let i = 0; i < cartProductsId.length; i++) {
-      const product = await this.products.getById(cartProductsId[i]);
+      const product = await productDao.getById(cartProductsId[i]);
       cartProductsDetailed.push(product);
     }
 
@@ -44,8 +41,8 @@ class CartController {
   addProductsToCart = async (req, res) => {
     const id = Number(req.params.id);
     const newProductId = Number(req.body.productId);
-    const cart = await this.storage.getById(id);
-    const product = await this.products.getById(newProductId);
+    const cart = await cartDao.getById(id);
+    const product = await productDao.getById(newProductId);
     console.log(newProductId, product);
 
     if (product.id) {
@@ -55,7 +52,7 @@ class CartController {
         cart.products = newProductId;
       }
 
-      const newCart = await this.storage.updateById(id, cart);
+      const newCart = await cartDao.updateById(id, cart);
       return res.json(newCart);
     } else {
       res.json({ error: 'No products were added' });
@@ -65,12 +62,12 @@ class CartController {
   removeProductFromCartById = async (req, res) => {
     const id = Number(req.params.id);
     const productIdToDelete = Number(req.params.id_product);
-    const cart = await this.storage.getById(id);
+    const cart = await cartDao.getById(id);
 
     if (cart.products) {
       let index = cart.products.indexOf(productIdToDelete);
       if (index > -1) cart.products.splice(index, 1);
-      const newCart = await this.storage.updateById(id, cart);
+      const newCart = await cartDao.updateById(id, cart);
       return res.json(newCart);
     } else {
       res.json({ error: 'Cart was already empty' });

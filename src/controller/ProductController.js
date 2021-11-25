@@ -1,22 +1,20 @@
-import container from '../persistence/container.js';
+import { productDao } from '../dao/index.js';
 import config from '../config/config.js';
 
 class ProductController {
-  constructor() {
-    this.storage = new container('.products');
-  }
+  constructor() {}
 
   getProducts = async (req, res) => {
     if (req.params.id) {
       const id = req.params.id;
-      const product = await this.storage.getById(id);
+      const product = await productDao.getById(id);
       if (product && product.length != 0) {
         return res.json(product);
       } else {
         return res.json({ error: 'Product not found' });
       }
     } else {
-      const products = await this.storage.getAll();
+      const products = await productDao.getAll();
       return res.json(products);
     }
   };
@@ -25,9 +23,9 @@ class ProductController {
     if (config.isAdmin) {
       const product = req.body;
       product.timestamp = Date.now();
-      const id = await this.storage.save(product);
+      const id = await productDao.save(product);
       if (id) {
-        return res.json(await this.storage.getById(id));
+        return res.json(await productDao.getById(id));
       } else {
         return res.json({ error: 'Error on saving product' });
       }
@@ -43,7 +41,7 @@ class ProductController {
     if (config.isAdmin) {
       const id = Number(req.params.id);
       const product = req.body;
-      const updatedProduct = await this.storage.updateById(id, product);
+      const updatedProduct = await productDao.updateById(id, product);
       if (updatedProduct) {
         return res.json(updatedProduct);
       } else {
@@ -60,9 +58,9 @@ class ProductController {
   deleteProductById = async (req, res) => {
     if (config.isAdmin) {
       const id = Number(req.params.id);
-      const productToDelete = await this.storage.getById(id);
+      const productToDelete = await productDao.getById(id);
       if (productToDelete) {
-        await this.storage.deleteById(id);
+        await productDao.deleteById(id);
         return res.json(productToDelete);
       } else {
         return res.json({ error: 'Product to delete does not exists' });
