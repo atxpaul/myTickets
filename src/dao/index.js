@@ -18,12 +18,14 @@ switch (config.storage) {
   //     );
   //     personasDao = new PersonasDaoFirebase();
   //     break;
-  //   case 'mongodb':
-  //     const { default: PersonasDaoMongoDb } = await import(
-  //       './PersonasDaoMongoDb.js'
-  //     );
-  //     personasDao = new PersonasDaoMongoDb();
-  //     break;
+  case 'mongodb':
+    const { default: ProductMongoDao } = await import(
+      './product/ProductMongoDao.js'
+    );
+    productDao = new ProductMongoDao();
+    const { default: CartMongoDao } = await import('./cart/CartMongoDao.js');
+    cartDao = new CartMongoDao();
+    break;
   default:
     const { default: ProductMemoryDao } = await import(
       './product/ProductMemoryDao.js'

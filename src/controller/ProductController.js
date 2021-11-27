@@ -39,7 +39,7 @@ class ProductController {
 
   updateProductById = async (req, res) => {
     if (config.isAdmin) {
-      const id = Number(req.params.id);
+      const id = req.params.id;
       const product = req.body;
       const updatedProduct = await productDao.updateById(id, product);
       if (updatedProduct) {

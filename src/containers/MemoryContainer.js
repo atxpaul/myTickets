@@ -18,14 +18,18 @@ class MemoryContainer {
 
   async updateById(id, newObject) {
     let object;
+    let numberId = Number(id);
     try {
-      object = this.content.find((c) => c.id == id);
+      object = this.content.find((c) => c.id == numberId);
     } catch (err) {
       console.log(err);
     }
     if (!object) {
       return [];
     }
+
+    this.content = this.content.filter((c) => c.id !== numberId);
+
     newObject.id = object.id;
 
     this.content.push(newObject);

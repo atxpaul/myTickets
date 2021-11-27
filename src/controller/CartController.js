@@ -13,7 +13,7 @@ class CartController {
   };
 
   deleteCartById = async (req, res) => {
-    const id = Number(req.params.id);
+    const id = req.params.id;
     const cartToDelete = await cartDao.getById(id);
     if (cartToDelete) {
       await cartDao.deleteById(id);
@@ -24,7 +24,7 @@ class CartController {
   };
 
   getProductsByCart = async (req, res) => {
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
     const cartContent = await cartDao.getById(id);
     const cartProductsId = cartContent.products;
@@ -39,8 +39,8 @@ class CartController {
   };
 
   addProductsToCart = async (req, res) => {
-    const id = Number(req.params.id);
-    const newProductId = Number(req.body.productId);
+    const id = req.params.id;
+    const newProductId = req.body.productId;
     const cart = await cartDao.getById(id);
     const product = await productDao.getById(newProductId);
     console.log(newProductId, product);
@@ -60,8 +60,8 @@ class CartController {
   };
 
   removeProductFromCartById = async (req, res) => {
-    const id = Number(req.params.id);
-    const productIdToDelete = Number(req.params.id_product);
+    const id = req.params.id;
+    const productIdToDelete = req.params.id_product;
     const cart = await cartDao.getById(id);
 
     if (cart.products) {

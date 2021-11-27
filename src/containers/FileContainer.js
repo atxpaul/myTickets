@@ -33,15 +33,16 @@ class FileContainer {
   async updateById(id, newObject) {
     let object;
     let content = await this.getAll();
+    let numberId = Number(id);
     try {
-      object = content.find((c) => c.id == id);
+      object = content.find((c) => c.id == numberId);
     } catch (err) {
       console.log(err);
     }
     if (!object) {
       return [];
     }
-    content = content.filter((c) => c.id !== id);
+    content = content.filter((c) => c.id !== numberId);
 
     newObject.id = object.id;
 
