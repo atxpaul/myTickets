@@ -1,38 +1,36 @@
 class MemoryContainer {
   constructor() {
-    this.products = [];
+    this.content = [];
   }
 
   async save(object) {
     let id;
-    if (this.products.length > 0) {
-      let ids = this.products.map((c) => c.id);
+    if (this.content.length > 0) {
+      let ids = this.content.map((c) => c.id);
       id = Math.max(...ids) + 1;
     } else {
       id = 1;
     }
     object.id = id;
-    this.products.push(object);
+    this.content.push(object);
     return id;
   }
 
   async updateById(id, newObject) {
     let object;
     try {
-      object = this.products.find((c) => c.id == id);
+      object = this.content.find((c) => c.id == id);
     } catch (err) {
       console.log(err);
     }
     if (!object) {
       return [];
     }
-    this.products = this.products.filter((c) => c.id !== id);
+    newObject.id = object.id;
 
-    object.title = newObject.title;
-    object.price = newObject.price;
-    object.thumbnail = newObject.thumbnail;
+    this.content.push(newObject);
 
-    this.products.push(object);
+    object = await this.getById(newObject.id);
 
     return object ? object : [];
   }
@@ -40,7 +38,7 @@ class MemoryContainer {
   async getById(id) {
     let object;
     try {
-      object = this.products.find((c) => c.id == id);
+      object = this.content.find((c) => c.id == id);
     } catch (err) {
       console.log(err);
     }
@@ -49,15 +47,15 @@ class MemoryContainer {
   }
 
   async getAll() {
-    return this.products;
+    return this.content;
   }
 
   async deleteById(id) {
-    this.products = this.products.filter((c) => c.id !== id);
+    this.content = this.content.filter((c) => c.id !== id);
   }
 
   async deleteAll() {
-    this.products = [];
+    this.content = [];
   }
 }
 
