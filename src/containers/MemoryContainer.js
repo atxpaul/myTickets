@@ -1,63 +1,63 @@
 class MemoryContainer {
   constructor() {
-    this.productos = [];
+    this.products = [];
   }
 
-  async save(objeto) {
+  async save(object) {
     let id;
-    if (this.productos.length > 0) {
-      let ids = this.productos.map((c) => c.id);
+    if (this.products.length > 0) {
+      let ids = this.products.map((c) => c.id);
       id = Math.max(...ids) + 1;
     } else {
       id = 1;
     }
-    objeto.id = id;
-    this.productos.push(objeto);
+    object.id = id;
+    this.products.push(object);
     return id;
   }
 
-  async updateById(id, nuevoObjeto) {
-    let objeto;
+  async updateById(id, newObject) {
+    let object;
     try {
-      objeto = this.productos.find((c) => c.id == id);
+      object = this.products.find((c) => c.id == id);
     } catch (err) {
       console.log(err);
     }
-    if (!objeto) {
+    if (!object) {
       return [];
     }
-    this.productos = this.productos.filter((c) => c.id !== id);
+    this.products = this.products.filter((c) => c.id !== id);
 
-    objeto.title = nuevoObjeto.title;
-    objeto.price = nuevoObjeto.price;
-    objeto.thumbnail = nuevoObjeto.thumbnail;
+    object.title = newObject.title;
+    object.price = newObject.price;
+    object.thumbnail = newObject.thumbnail;
 
-    this.productos.push(objeto);
+    this.products.push(object);
 
-    return objeto ? objeto : [];
+    return object ? object : [];
   }
 
   async getById(id) {
-    let objeto;
+    let object;
     try {
-      objeto = this.productos.find((c) => c.id == id);
+      object = this.products.find((c) => c.id == id);
     } catch (err) {
       console.log(err);
     }
 
-    return objeto ? objeto : [];
+    return object ? object : [];
   }
 
   async getAll() {
-    return this.productos;
+    return this.products;
   }
 
   async deleteById(id) {
-    this.productos = this.productos.filter((c) => c.id !== id);
+    this.products = this.products.filter((c) => c.id !== id);
   }
 
   async deleteAll() {
-    this.productos = [];
+    this.products = [];
   }
 }
 
