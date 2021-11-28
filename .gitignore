@@ -107,3 +107,7 @@ dist
 .storage
 .products*
 .carts*
+
+# Firebase
+
+db/

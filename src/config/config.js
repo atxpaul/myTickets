@@ -8,7 +8,7 @@ const config = {
     },
   },
   firebase: {
-    uri: 'myticketsproject-firebase-adminsdk-35s3z-60c3a17421.json',
+    uri: 'db/myticketsproject-firebase-adminsdk-35s3z-60c3a17421.json',
   },
 };
 export default config;
