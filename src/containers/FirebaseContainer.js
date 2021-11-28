@@ -48,7 +48,11 @@ class FirestoreContainer {
     } catch (err) {
       console.log(err);
     }
-    return { id, ...data };
+    if (data) {
+      return { id, ...data };
+    } else {
+      return null;
+    }
   }
 
   async getAll() {

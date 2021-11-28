@@ -19,15 +19,22 @@ class CartController {
       await cartDao.deleteById(id);
       return res.json(cartToDelete);
     } else {
-      return res.json({ error: 'Product to delete does not exists' });
+      return res.json({ error: 'Cart to delete does not exists' });
     }
   };
 
   getProductsByCart = async (req, res) => {
+    let cartProductsId;
     const id = req.params.id;
 
     const cartContent = await cartDao.getById(id);
-    const cartProductsId = cartContent.products;
+    if (cartContent) {
+      cartProductsId = cartContent.products;
+    } else {
+      return res.json({
+        error: 'Cart does not exists or does not have products',
+      });
+    }
 
     const cartProductsDetailed = [];
     for (let i = 0; i < cartProductsId.length; i++) {
@@ -66,9 +73,14 @@ class CartController {
 
     if (cart.products) {
       let index = cart.products.indexOf(productIdToDelete);
-      if (index > -1) cart.products.splice(index, 1);
-      const newCart = await cartDao.updateById(id, cart);
-      return res.json(newCart);
+      console.log(index);
+      if (index > -1) {
+        cart.products.splice(index, 1);
+        const newCart = await cartDao.updateById(id, cart);
+        return res.json(newCart);
+      } else {
+        res.json({ error: 'Product did not exist in cart' });
+      }
     } else {
       res.json({ error: 'Cart was already empty' });
     }
