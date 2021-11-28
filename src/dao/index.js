@@ -12,12 +12,16 @@ switch (config.storage) {
     const { default: CartFileDao } = await import('./cart/CartFileDao.js');
     cartDao = new CartFileDao('.carts');
     break;
-  //   case 'firebase':
-  //     const { default: PersonasDaoFirebase } = await import(
-  //       './PersonasDaoFirebase.js'
-  //     );
-  //     personasDao = new PersonasDaoFirebase();
-  //     break;
+  case 'firebase':
+    const { default: ProductFirebaseDao } = await import(
+      './product/ProductFirebaseDao.js'
+    );
+    productDao = new ProductFirebaseDao();
+    const { default: CartFirebaseDao } = await import(
+      './cart/CartFirebaseDao.js'
+    );
+    cartDao = new CartFirebaseDao();
+    break;
   case 'mongodb':
     const { default: ProductMongoDao } = await import(
       './product/ProductMongoDao.js'
