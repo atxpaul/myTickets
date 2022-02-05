@@ -1,4 +1,8 @@
 import express from 'express';
+import parseArgs from 'minimist';
+import cluster from 'cluster';
+import os from 'os';
+
 import productRouter from './router/productRouter.js';
 import cartRouter from './router/cartRouter.js';
 
@@ -16,6 +20,21 @@ app.use((req, res) => {
     description: `Route ${req.url} not implemented`,
   });
 });
+
+const options = {
+  alias: {
+    m: 'mode',
+    c: 'cpu',
+  },
+  default: {
+    mode: 'fork',
+    cpu: os.cpus().length,
+  },
+};
+
+const commandLineArgs = process.argv.slice(2);
+
+const { mode, cpu, _ } = parseArgs(commandLineArgs, options);
 
 const PORT = process.env.PORT || 8080;
 
