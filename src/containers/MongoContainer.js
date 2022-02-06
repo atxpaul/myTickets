@@ -13,7 +13,7 @@ class MongoContainer {
     try {
       insert = await this.collection.create(object);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
     return insert;
   }
@@ -23,7 +23,7 @@ class MongoContainer {
     try {
       update = await this.collection.findByIdAndUpdate({ _id: id }, newObject);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
     return update;
   }

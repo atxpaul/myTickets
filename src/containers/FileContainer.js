@@ -1,4 +1,5 @@
 import fs from 'fs';
+import logger from '../config/logger';
 
 class FileContainer {
   constructor(fileName) {
@@ -25,7 +26,7 @@ class FileContainer {
     try {
       await fs.promises.writeFile(this.fileName, json, 'utf-8');
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
     return id;
   }
@@ -37,7 +38,7 @@ class FileContainer {
     try {
       object = content.find((c) => c.id == numberId);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
     if (!object) {
       return [];
@@ -52,7 +53,7 @@ class FileContainer {
     try {
       await fs.promises.writeFile(this.fileName, json, 'utf-8');
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
 
     object = await this.getById(newObject.id);
@@ -66,7 +67,7 @@ class FileContainer {
     try {
       object = content.find((c) => c.id == id);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
 
     return object ? object : [];
@@ -91,7 +92,7 @@ class FileContainer {
     try {
       await fs.promises.writeFile(this.fileName, json, 'utf-8');
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
   }
 
@@ -99,7 +100,7 @@ class FileContainer {
     try {
       await fs.promises.writeFile(this.fileName, '', 'utf-8');
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
   }
 }

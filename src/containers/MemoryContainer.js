@@ -22,7 +22,7 @@ class MemoryContainer {
     try {
       object = this.content.find((c) => c.id == numberId);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
     if (!object) {
       return [];
@@ -44,7 +44,7 @@ class MemoryContainer {
     try {
       object = this.content.find((c) => c.id == id);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
 
     return object ? object : [];

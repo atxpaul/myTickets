@@ -6,6 +6,8 @@ import os from 'os';
 import productRouter from './router/productRouter.js';
 import cartRouter from './router/cartRouter.js';
 
+import logger from './config/logger.js';
+
 const app = express();
 
 app.use(express.json());
@@ -40,25 +42,25 @@ function connectServer() {
   const PORT = process.env.PORT || 8080;
 
   const server = app.listen(PORT, () => {
-    console.log(
+    logger.info(
       `Server on PID ${process.pid} listening on port ${server.address().port}`
     );
   });
-  server.on('error', (error) => console.log(`Error on server ${error}`));
+  server.on('error', (error) => logger.error(`Error on server ${error}`));
 }
 
 if (mode === 'cluster') {
   if (cluster.isPrimary) {
-    console.log(`Starting instancies on ${cpu} CPUs`);
-    console.log(`PID MASTER ${process.pid}`);
+    logger.info(`Starting instancies on ${cpu} CPUs`);
+    logger.info(`PID MASTER ${process.pid}`);
 
     for (let i = 0; i < cpu; i++) {
-      console.log(`Starting worker on CPU ${i + 1}`);
+      logger.info(`Starting worker on CPU ${i + 1}`);
       cluster.fork();
     }
 
     cluster.on('exit', (worker) => {
-      console.log(
+      logger.warn(
         'Worker',
         worker.process.pid,
         'died',

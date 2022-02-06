@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import fs from 'fs';
 import config from '../config/config.js';
+import logger from '../config/logger.js';
 
 const serviceAccount = JSON.parse(
   fs.readFileSync(config.firebase.uri, 'utf-8')
@@ -22,7 +23,7 @@ class FirestoreContainer {
     try {
       insert = await this.collection.add(object);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
     return insert.id;
   }
@@ -34,7 +35,7 @@ class FirestoreContainer {
       update = await this.collection.doc(id).update(newObject);
       data = this.getById(id);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
     return data;
   }
@@ -46,7 +47,7 @@ class FirestoreContainer {
       select = await this.collection.doc(id).get();
       data = select.data();
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
     if (data) {
       return { id, ...data };
@@ -69,7 +70,7 @@ class FirestoreContainer {
     try {
       await this.collection.doc(id).delete();
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
   }
 
@@ -77,7 +78,7 @@ class FirestoreContainer {
     try {
       await this.collection.doc().delete();
     } catch (err) {
-      console.log(err);
+      logger.error(err);
     }
   }
 }

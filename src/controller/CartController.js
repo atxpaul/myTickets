@@ -50,7 +50,6 @@ class CartController {
     const newProductId = req.body.productId;
     const cart = await cartDao.getById(id);
     const product = await productDao.getById(newProductId);
-    console.log(newProductId, product);
 
     if (product.id) {
       if (cart.products) {
@@ -73,7 +72,6 @@ class CartController {
 
     if (cart.products) {
       let index = cart.products.indexOf(productIdToDelete);
-      console.log(index);
       if (index > -1) {
         cart.products.splice(index, 1);
         const newCart = await cartDao.updateById(id, cart);
