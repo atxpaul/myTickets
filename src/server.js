@@ -17,6 +17,10 @@ app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
 
 app.use((req, res) => {
+  const { url, method } = req;
+  if (url != '/favicon.ico') {
+    logger.warn(`Ruta ${method}-${url} no implementada`);
+  }
   res.json({
     error: -2,
     description: `Route ${req.url} not implemented`,
