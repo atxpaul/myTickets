@@ -5,6 +5,7 @@ import bCrypt from 'bcrypt';
 import LocalStrategy from 'passport-local';
 import User from '../model/UserModel.js';
 import logger from '../config/logger.js';
+import mongoose from 'mongoose';
 
 import controller from '../controller/UserController.js';
 import config from '../config/config.js';
@@ -17,6 +18,8 @@ router.use(passport.initialize());
 router.use(passport.session());
 
 const userController = new controller();
+
+mongoose.connect(config.mongodb.url, config.mongodb.options);
 
 router.post(
   '/login',

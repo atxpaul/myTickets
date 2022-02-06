@@ -5,9 +5,11 @@ const config = {
   isAdmin: true,
   storage: 'firebase',
   mongodb: {
-    url: 'mongodb://localhost/ecommerce',
+    url: process.env.MONGO_URL,
     options: {
       serverSelectionTimeoutMS: 5000,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     },
   },
   firebase: {
