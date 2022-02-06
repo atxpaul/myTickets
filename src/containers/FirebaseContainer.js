@@ -3,9 +3,7 @@ import fs from 'fs';
 import config from '../config/config.js';
 import logger from '../config/logger.js';
 
-const serviceAccount = JSON.parse(
-  fs.readFileSync(config.firebase.uri, 'utf-8')
-);
+const serviceAccount = config.firebase.options;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
