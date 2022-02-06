@@ -1,11 +1,13 @@
 import express from 'express';
-import bCrypt from 'bcrypt';
 import passport from 'passport';
-import LocalStrategy from 'passport-local';
 import session from 'express-session';
-
-import config from '../config/config.js';
+import bCrypt from 'bcrypt';
+import LocalStrategy from 'passport-local';
 import User from '../model/UserModel.js';
+import logger from '../config/logger.js';
+
+import controller from '../controller/UserController.js';
+import config from '../config/config.js';
 
 const { Router } = express;
 const router = new Router();
@@ -13,6 +15,14 @@ const router = new Router();
 router.use(session(config.session));
 router.use(passport.initialize());
 router.use(passport.session());
+
+const userController = new controller();
+
+router.post(
+  '/login',
+  passport.authenticate('login', { failureRedirect: '/faillogin' }),
+  userController.login
+);
 
 //MIDDLEWARE
 passport.use(
@@ -22,7 +32,7 @@ passport.use(
       passReqToCallback: true,
     },
     (req, username, password, done) => {
-      logger.info(`Registrando usuario ${username}`);
+      logger.info(`Registering user ${username}`);
       User.findOne({ username: username }, function (err, user) {
         if (err) {
           logger.error(`Error in SignUp: ${err}`);
@@ -56,7 +66,7 @@ passport.use(
 passport.use(
   'login',
   new LocalStrategy((username, password, done) => {
-    logger.info(`Login del usuario ${username}`);
+    logger.info(`Login user ${username}`);
     User.findOne({ username }, (err, user) => {
       if (err) return done(err);
 

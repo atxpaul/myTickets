@@ -5,6 +5,7 @@ import os from 'os';
 
 import productRouter from './router/productRouter.js';
 import cartRouter from './router/cartRouter.js';
+import userRouter from './router/userRouter.js';
 
 import logger from './config/logger.js';
 
@@ -15,11 +16,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
+app.use('/api/users', userRouter);
 
 app.use((req, res) => {
   const { url, method } = req;
   if (url != '/favicon.ico') {
-    logger.warn(`Ruta ${method}-${url} no implementada`);
+    logger.warn(`Route ${method}-${url} not implemented`);
   }
   res.json({
     error: -2,
