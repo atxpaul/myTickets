@@ -47,7 +47,13 @@ function connectServer() {
 
   const server = app.listen(PORT, () => {
     logger.info(
-      `Server on PID ${process.pid} listening on port ${server.address().port}`
+      `
+      ###################################################
+      🛡️  Server on PID ${process.pid} listening on port: ${
+        server.address().port
+      } 🛡️ 
+      ###################################################
+    `
     );
   });
   server.on('error', (error) => logger.error(`Error on server ${error}`));
