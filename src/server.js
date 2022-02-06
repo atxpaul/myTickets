@@ -36,9 +36,37 @@ const commandLineArgs = process.argv.slice(2);
 
 const { mode, cpu, _ } = parseArgs(commandLineArgs, options);
 
-const PORT = process.env.PORT || 8080;
+function connectServer() {
+  const PORT = process.env.PORT || 8080;
 
-const server = app.listen(PORT, () => {
-  console.log(`Servidor http escuchando en el puerto ${server.address().port}`);
-});
-server.on('error', (error) => console.log(`Error en servidor ${error}`));
+  const server = app.listen(PORT, () => {
+    console.log(
+      `Server on PID ${process.pid} listening on port ${server.address().port}`
+    );
+  });
+  server.on('error', (error) => console.log(`Error on server ${error}`));
+}
+
+if (mode === 'cluster') {
+  if (cluster.isPrimary) {
+    console.log(`Starting instancies on ${cpu} CPUs`);
+    console.log(`PID MASTER ${process.pid}`);
+
+    for (let i = 0; i < cpu; i++) {
+      console.log(`Starting worker on CPU ${i + 1}`);
+      cluster.fork();
+    }
+
+    cluster.on('exit', (worker) => {
+      console.log(
+        'Worker',
+        worker.process.pid,
+        'died',
+        new Date().toLocaleString()
+      );
+      cluster.fork();
+    });
+  }
+} else {
+  connectServer();
+}
