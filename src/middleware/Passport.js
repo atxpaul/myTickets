@@ -26,19 +26,28 @@ passport.use(
           logger.error('User already exists');
           return done(null, false);
         }
-
+        logger.info(`Creating user ${username} in database`);
         const newUser = {
           username: username,
           password: createHash(password),
           email: req.body.email,
+          name: req.body.name,
+          surname: req.body.surname,
+          address: req.body.address,
+          age: req.body.age,
+          phone: req.body.phone,
+          profilePic: req.file,
         };
 
+        //logger.info(req.file.originalname);
+        logger.info(newUser);
         User.create(newUser, (err, userWithId) => {
           if (err) {
             logger.error(`Error in saving user: ${err}`);
             return done(err);
           }
           logger.info(`User registration succesful ${user}`);
+          logger.info(req);
           return done(null, userWithId);
         });
       });
@@ -50,7 +59,7 @@ passport.use(
   'login',
   new LocalStrategy((username, password, done) => {
     logger.info(`Login user ${username}`);
-    User.findOne({ email: username }, (err, user) => {
+    User.findOne({ username: username }, (err, user) => {
       if (err) return done(err);
 
       if (!user) {
