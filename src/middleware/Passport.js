@@ -50,7 +50,7 @@ passport.use(
   'login',
   new LocalStrategy((username, password, done) => {
     logger.info(`Login user ${username}`);
-    User.findOne({ username }, (err, user) => {
+    User.findOne({ email: username }, (err, user) => {
       if (err) return done(err);
 
       if (!user) {
@@ -62,7 +62,7 @@ passport.use(
         logger.error('Invalid Password');
         return done(null, false);
       }
-
+      logger.info(`User ${username} logged`);
       return done(null, user);
     });
   })

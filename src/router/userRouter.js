@@ -1,5 +1,6 @@
 import express from 'express';
-import passport from '../middleware/Passport.js';
+import passport from '../middleware/passport.js';
+import checkAuthentication from '../middleware/checkAuthentication.js';
 import session from 'express-session';
 import mongoose from 'mongoose';
 
@@ -19,8 +20,18 @@ mongoose.connect(config.mongodb.url, config.mongodb.options);
 
 router.post(
   '/login',
-  passport.authenticate('login', { failureRedirect: '/faillogin' }),
+  passport.authenticate('login', {
+    failureMessage: true,
+  }),
   userController.login
 );
+
+router.post(
+  '/singup',
+  passport.authenticate('signup', { failureMessage: true }),
+  userController.signup
+);
+
+router.get('/home', checkAuthentication, userController.home);
 
 export default router;
