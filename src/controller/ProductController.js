@@ -22,12 +22,23 @@ class ProductController {
   addNewProduct = async (req, res) => {
     if (config.isAdmin) {
       const product = req.body;
-      product.timestamp = Date.now();
-      const id = await productDao.save(product);
-      if (id) {
-        return res.json(await productDao.getById(id));
+      if (
+        product.hasOwnProperty('price') &&
+        product.hasOwnProperty('thumbnail') &&
+        product.hasOwnProperty('title')
+      ) {
+        product.timestamp = Date.now();
+        const id = await productDao.save(product);
+        if (id) {
+          return res.json(await productDao.getById(id));
+        } else {
+          return res.json({ error: 'Error on saving product' });
+        }
       } else {
-        return res.json({ error: 'Error on saving product' });
+        return res.json({
+          error: -1,
+          description: 'Invalid product, check keys and properties',
+        });
       }
     } else {
       return res.json({
