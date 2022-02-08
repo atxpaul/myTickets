@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/users', userRouter);
+app.use(express.static('public'));
 
 app.use((req, res) => {
   const { url, method } = req;

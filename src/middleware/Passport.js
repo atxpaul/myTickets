@@ -34,9 +34,9 @@ passport.use(
           name: req.body.name,
           surname: req.body.surname,
           address: req.body.address,
-          age: req.body.age,
+          age: Number(req.body.age),
           phone: req.body.phone,
-          profilePic: req.file,
+          profilePic: req.file.path,
         };
 
         //logger.info(req.file.originalname);
@@ -47,7 +47,6 @@ passport.use(
             return done(err);
           }
           logger.info(`User registration succesful ${user}`);
-          logger.info(req);
           return done(null, userWithId);
         });
       });
