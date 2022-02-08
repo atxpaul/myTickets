@@ -41,9 +41,3 @@ router.get('/signup', userController.getSignup);
 router.get('/home', checkAuthentication, userController.getHome);
 
 export default router;
-
-//TO-DO:
-/*
-Cargar imagen con multer.
-Se supone que se puede cargar también el resto del formulario usando req.body y req.file.
-*/

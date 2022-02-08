@@ -1,4 +1,5 @@
 import logger from '../config/logger.js';
+import Mailer from '../jobs/Mailer.js';
 
 class UserController {
   constructor() {}
@@ -11,8 +12,12 @@ class UserController {
 
   postSignup = async (req, res) => {
     const { originalUrl, method } = req;
+    const user = req.user;
+    const mailer = new Mailer();
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    res.redirect('/login.html');
+    mailer.sendSignupNotification(user);
+    //res.redirect('/login.html');
+    res.status(200).json({ name: user.name, email: user.username });
   };
 
   getHome = async (req, res) => {

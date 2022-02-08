@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
+  adminMail: process.env.ADMIN_MAIL,
   isAdmin: true,
   storage: 'firebase',
   mongodb: {
@@ -37,6 +38,10 @@ const config = {
     rolling: true,
     resave: true,
     saveUninitialized: false,
+  },
+  gmail: {
+    sender: process.env.GMAIL_USER,
+    password: process.env.GMAIL_PASSWORD,
   },
 };
 export default config;
