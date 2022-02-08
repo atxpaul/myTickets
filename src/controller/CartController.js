@@ -1,4 +1,5 @@
 import { cartDao, productDao } from '../dao/index.js';
+import Mailer from '../jobs/Mailer.js';
 
 class CartController {
   constructor() {}
@@ -63,6 +64,28 @@ class CartController {
     } else {
       res.json({ error: 'No products were added' });
     }
+  };
+
+  createNewOrderFromCart = async (req, res) => {
+    const id = req.params.id;
+    const user = req.user;
+    if (!user) {
+      res.json({ error: 'No user is logged' });
+    }
+    const cart = await cartDao.getById(id);
+    let listOfProductsForNewOrder = [];
+    for (let product in cart.products) {
+      let soldProduct = await productDao.getById(product);
+
+      let productTransformed = {
+        title: soldProduct.title,
+        price: soldProduct.price,
+      };
+      listOfProductsForNewOrder.push(productTransformed);
+    }
+    const mailer = new Mailer();
+    mailer.sendNewOrderNotification(user, listOfProductsForNewOrder);
+    res.json({ success: 'New order created for user' });
   };
 
   removeProductFromCartById = async (req, res) => {

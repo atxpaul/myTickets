@@ -11,6 +11,7 @@ router.post('/', cartController.createNewCart);
 router.delete('/:id', cartController.deleteCartById);
 router.get('/:id/products', cartController.getProductsByCart);
 router.post('/:id/products', cartController.addProductsToCart);
+router.post('/:id/order', cartController.createNewOrderFromCart);
 router.delete(
   '/:id/products/:id_product',
   cartController.removeProductFromCartById
