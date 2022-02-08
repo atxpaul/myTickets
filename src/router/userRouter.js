@@ -34,10 +34,10 @@ router.post(
   userController.postSignup
 );
 
-router.post('/image', upload.single('avatar'), userController.userImage);
-
 router.get('/login', userController.getLogin);
 router.get('/signup', userController.getSignup);
 router.get('/home', checkAuthentication, userController.getHome);
+router.get('/logout', userController.getLogout);
+router.get('/userimage/:image', userController.getImageFile);
 
 export default router;

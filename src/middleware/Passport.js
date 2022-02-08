@@ -36,7 +36,7 @@ passport.use(
           address: req.body.address,
           age: Number(req.body.age),
           phone: req.body.phone,
-          profilePic: req.file.path,
+          profilePic: req.file.filename,
         };
 
         //logger.info(req.file.originalname);

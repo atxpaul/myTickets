@@ -1,13 +1,15 @@
 import logger from '../config/logger.js';
 import Mailer from '../jobs/Mailer.js';
+import fs from 'fs';
+import path from 'path';
 
 class UserController {
   constructor() {}
 
   postLogin = async (req, res) => {
     const { originalUrl, method } = req;
-    logger.info(`Processing request: ${method}-${originalUrl}s`);
-    res.redirect('/');
+    logger.info(`Processing request: ${method}-${originalUrl}`);
+    res.redirect('/home.html');
   };
 
   postSignup = async (req, res) => {
@@ -17,14 +19,15 @@ class UserController {
     logger.info(`Processing request: ${method}-${originalUrl}`);
     mailer.sendSignupNotification(user);
     //res.redirect('/login.html');
-    res.status(200).json({ name: user.name, email: user.username });
+    res.status(200).json({ name: user.name, username: user.username });
   };
 
   getHome = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
     const user = req.user;
-    res.status(200).json({ name: user.name, email: user.username });
+    logger.info(`Sending user data ${user}`);
+    res.status(200).json({ user });
   };
 
   getLogin = async (req, res) => {
@@ -39,22 +42,27 @@ class UserController {
     res.redirect('/signup.html');
   };
 
-  postLogout = async (req, res) => {
+  getLogout = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
     req.session.destroy();
-    req.redirect('/logout.html');
+    res.redirect('/logout.html');
   };
 
-  userImage = async (req, res, next) => {
-    logger.info(req.file);
-    const file = req.file;
-    if (!file) {
-      const error = new Error(`Please, upload a file`);
-      error.httpStatusCode = 400;
-      res.send(error);
+  getImageFile = async (req, res) => {
+    const file = req.params.image;
+    const pathFile = './uploads/' + file;
+    logger.info(`Trying to get image ${pathFile}`);
+    let fileExists = fs.existsSync(pathFile);
+    if (fileExists) {
+      logger.info(`Sending image`);
+      return res.sendFile(path.resolve(pathFile));
+    } else {
+      logger.warn(`Image ${pathFile} not found!`);
+      return res.status(404).send({
+        message: 'File does not exists',
+      });
     }
-    res.send(file);
   };
 }
 
