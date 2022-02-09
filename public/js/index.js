@@ -21,11 +21,8 @@ async function getProducts() {
     method: 'GET',
   });
   const products = await productsRaw.json();
-  console.log(products);
   let productsArray = [];
   for (let i in products) {
-    console.log(products[i]);
-    console.log(i);
     let productHtml = `<div class="col-lg-3 col-sm-6 col-12 mb-4 d-flex align-items-stretch">
         <div class="card">
           <img class="card-img-top" src="${products[i].thumbnail}" alt="">
@@ -41,9 +38,6 @@ async function getProducts() {
     productsArray.push(productHtml);
   }
   productsDiv.innerHTML = productsArray.join(`\n`);
-  console.log(productsArray);
-  //console.log(productsHtml);
-  //productsDiv.innerHTML = productsHtml;
 }
 
 (async () => {
