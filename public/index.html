@@ -5,42 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/stylesindex.css">
 
   <!-- <link rel="stylesheet" href="css/grid.css"> -->
   <title>myTickets</title>
 </head>
-<body class="bg-dark">
+<body id="cover" >
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a href="#" class="navbar-brand">Navbar</a>
+        <a href="#" class="navbar-brand">myTickets</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuNavegacion" aria-expanded="false" aria-label="Menú de navegación">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="menuNavegacion">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a href="#" class="nav-link">Inicio</a>
-            </li>
+            </li> -->
             <!-- Botón desplegable/Submenú -->
             <li class="nav-item dropdown">
               <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-toggle="dropdown">
-                Productos
+                Events
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a href="#" class="dropdown-item">Sobremesa</a>
-                <a href="#" class="dropdown-item">Portátiles</a>
-                <a href="#" class="dropdown-item">Smartphones</a>
-                <a href="#" class="dropdown-item">Accesorios</a>
+                <a href="#" class="dropdown-item">Live Shows</a>
+                <a href="#" class="dropdown-item">Games</a>
+                <a href="#" class="dropdown-item">Online</a>
               </div>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">Contacto</a>
             </li>
           </ul>
+          <div id="login">
+            <p id="loginp" class="mr-3 mt-3 text-decoration-none text-light">Welcome, Persona</p>
+            <a id="logina" href="/api/users/login" class="btn btn-primary my-2 my-sm-0">Login</a>
+          </div>
           
-          <p class="mr-3 mt-3 text-decoration-none text-light">Welcome, Persona</p>
-          <button class="btn btn-primary my-2 my-sm-0">Login</button>
           
 
 
@@ -63,13 +65,13 @@
           <!-- Slides -->
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <img src="img/s1.jpg" class="d-block w-100"alt="">
+              <img src="https://www.105.net/resizer/1200/400/true/1432804689829.jpg--.jpg?1432804690000" class="d-block w-100"alt="">
             </div>
             <div class="carousel-item">
-              <img src="img/s2.jpg" class="d-block w-100"alt="">
+              <img src="https://gray-wowt-prod.cdn.arcpublishing.com/resizer/TWQKl3X6D9TkzQCBRfure3bgyew=/1200x400/smart/filters:quality(85)/cloudfront-us-east-1.images.arcpublishing.com/gray/SFMX5K7MPFFP7PHNJWVNAXM5PQ.jpg" class="d-block w-100"alt="">
             </div>
             <div class="carousel-item">
-              <img src="img/s3.jpg" class="d-block w-100"alt="">
+              <img src="https://pbs.twimg.com/media/EdXsLxgX0AATvbu.jpg" class="d-block w-100"alt="">
             </div>
           </div>
 
@@ -91,106 +93,12 @@
     <div class="row">
       <div class="col-12">
         <div class="py-4 border-bottom">
-          <h1 class="text-center display-4 text-light">Próximos eventos</h1>
+          <h1 class="text-center display-4 text-light">Upcoming events</h1>
         </div>
       </div>
     </div>
-    <div class="row py-4">
-      <div class="col-lg-3 col-sm-6 col-12 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="img/1.jpg" alt="">
-          <div class="card-body">
-            <h3 class="card-title">iPhone</h3>
-            <p class="card-text">Lorem ipsum dolor sit amet.</p>
-            <a href="" class="btn btn-sm btn-primary">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary">Detalles</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-sm-6 col-12 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="img/2.jpg" alt="">
-          <div class="card-body">
-            <h3 class="card-title">Mac Pro</h3>
-            <p class="card-text">Lorem ipsum dolor sit amet.</p>
-            <a href="" class="btn btn-sm btn-primary">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary">Detalles</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-sm-6 col-12 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="img/3.jpg" alt="">
-          <div class="card-body">
-            <h3 class="card-title">Canon</h3>
-            <p class="card-text">Lorem ipsum dolor sit amet.</p>
-            <a href="" class="btn btn-sm btn-primary">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary">Detalles</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-sm-6 col-12 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="img/4.jpg" alt="">
-          <div class="card-body">
-            <h3 class="card-title">Smartwatch</h3>
-            <p class="card-text">Lorem ipsum dolor sit amet.</p>
-            <a href="" class="btn btn-sm btn-primary">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary">Detalles</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-sm-6 col-12 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="img/5.jpg" alt="">
-          <div class="card-body">
-            <h3 class="card-title">Teclado</h3>
-            <p class="card-text">Lorem ipsum dolor sit amet.</p>
-            <a href="" class="btn btn-sm btn-primary">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary">Detalles</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-sm-6 col-12 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="img/6.jpg" alt="">
-          <div class="card-body">
-            <h3 class="card-title">iPad</h3>
-            <p class="card-text">Lorem ipsum dolor sit amet.</p>
-            <a href="" class="btn btn-sm btn-primary">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary">Detalles</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-sm-6 col-12 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="img/7.jpg" alt="">
-          <div class="card-body">
-            <h3 class="card-title">Macbook</h3>
-            <p class="card-text">Lorem ipsum dolor sit amet.</p>
-            <a href="" class="btn btn-sm btn-primary">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary">Detalles</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-sm-6 col-12 mb-4">
-        <div class="card">
-          <img class="card-img-top" src="img/8.jpg" alt="">
-          <div class="card-body">
-            <h3 class="card-title">Lomo</h3>
-            <p class="card-text">Lorem ipsum dolor sit amet.</p>
-            <a href="" class="btn btn-sm btn-primary">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary">Detalles</a>
-          </div>
-        </div>
-      </div>
+    <div id="products" class="row py-4">
+      
     </div>
   </main>
   <footer class="container">
@@ -206,5 +114,6 @@
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>

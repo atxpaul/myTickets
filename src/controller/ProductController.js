@@ -1,10 +1,13 @@
 import { productDao } from '../dao/index.js';
 import config from '../config/config.js';
+import logger from '../config/logger.js';
 
 class ProductController {
   constructor() {}
 
   getProducts = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     if (req.params.id) {
       const id = req.params.id;
       const product = await productDao.getById(id);
@@ -20,6 +23,8 @@ class ProductController {
   };
 
   addNewProduct = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     if (config.isAdmin) {
       const product = req.body;
       if (
@@ -49,6 +54,8 @@ class ProductController {
   };
 
   updateProductById = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     if (config.isAdmin) {
       const id = req.params.id;
       const product = req.body;
@@ -67,11 +74,19 @@ class ProductController {
   };
 
   deleteProductById = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     if (config.isAdmin) {
-      const id = Number(req.params.id);
+      const id = req.params.id;
+      logger.info(`Trying to delete product ${id}`);
       const productToDelete = await productDao.getById(id);
       if (productToDelete) {
-        await productDao.deleteById(id);
+        try {
+          await productDao.deleteById(id);
+        } catch (err) {
+          logger.error(err);
+        }
+
         return res.json(productToDelete);
       } else {
         return res.json({ error: 'Product to delete does not exists' });
