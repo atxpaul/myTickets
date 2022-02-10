@@ -27,7 +27,7 @@ class Mailer {
 
   async sendNewOrderNotification(user, products) {
     let htmlForProductList = `<ul>`;
-    for (let product in products) {
+    for (let product of products) {
       htmlForProductList = htmlForProductList.concat(
         `<li>${product.title} - ${product.price}</li>`
       );

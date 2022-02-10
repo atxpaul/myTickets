@@ -1,8 +1,14 @@
-const salute = document.getElementById('loginp');
+const salute = document.getElementById('user');
 const login = document.getElementById('logina');
 const productsDiv = document.getElementById('products');
+const displayCheckout = document.getElementById('displayCheckout');
+const dropDown = document.getElementById('navbarUserDropdown');
+const checkout = document.getElementById('checkout');
+const cartDiv = document.getElementById('cart');
+let productList = [];
 let cartId = undefined;
 let username;
+let name;
 
 async function getUserLogin() {
   const userRaw = await fetch('/api/users/home', {
@@ -15,6 +21,11 @@ async function getUserLogin() {
     salute.innerText = `Welcome, ${data.user.name}`;
     login.innerText = `Logout`;
     login.setAttribute('href', '/api/users/logout');
+    displayCheckout.classList.remove('hidden');
+    checkout.classList.remove('hidden');
+    displayCheckout.classList.add('dropdown-menu');
+    dropDown.classList.add('dropdown-toggle');
+    name = data.user.name;
     return data.user.username;
   } else {
     salute.innerText = `Welcome, visitor`;
@@ -32,10 +43,6 @@ async function addProductsToCart(productId) {
 
   console.log(`Trying to add product ${productId} to cart ${cartId}`);
   console.log(`Product in JSON ${data}`);
-  // const cartRaw = await fetch(`/api/cart/${cartId}/products`, {
-  //   method: 'POST',
-  //   body: { productId: productId },
-  // });
   const xhr = new XMLHttpRequest();
   xhr.open('POST', `/api/cart/${cartId}/products`, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
@@ -44,7 +51,31 @@ async function addProductsToCart(productId) {
       productId: productId,
     })
   );
-  console.log(cartRaw);
+  await updateCartView();
+}
+
+async function updateCartView() {
+  const cartRaw = await fetch(`/api/cart/${cartId}/products`, {
+    method: 'GET',
+  });
+  const cart = await cartRaw.json();
+  let cartProductsHtmlArray = [];
+  console.log(cart);
+  if (cart.length > 0) {
+    salute.innerText = `Welcome, ${name} 🛒`;
+
+    for (product of cart) {
+      console.log(product);
+      let obj = productList.find((o) => o.productId === product.id);
+      console.log(obj);
+      let cartProductHtml = `
+      <a href="#" class="dropdown-item">${obj.title}</a>
+      `;
+      cartProductsHtmlArray.push(cartProductHtml);
+    }
+    console.log(`Displaying cart ${cartProductsHtmlArray}`);
+    cartDiv.innerHTML = cartProductsHtmlArray.join(`\n`);
+  }
 }
 
 async function createNewCart() {
@@ -52,8 +83,6 @@ async function createNewCart() {
     method: 'POST',
   });
   cartId = await cartRaw.json();
-
-  if (isEmpty(cartId)) cartId = 0;
 }
 
 async function getCartsByUser() {
@@ -72,6 +101,11 @@ async function getProducts() {
   const products = await productsRaw.json();
   let productsArray = [];
   for (let i in products) {
+    let productForList = {
+      productId: products[i].id,
+      title: products[i].title,
+      price: products[i].price,
+    };
     let productHtml = `<div class="col-lg-3 col-sm-6 col-12 mb-4 d-flex align-items-stretch">
         <div class="card">
           <img class="card-img-top" src="${products[i].thumbnail}" alt="">
@@ -85,8 +119,16 @@ async function getProducts() {
       </div>`;
 
     productsArray.push(productHtml);
+    productList.push(productForList);
   }
   productsDiv.innerHTML = productsArray.join(`\n`);
+}
+
+async function checkoutNewOrder() {
+  console.log(`Checkout cart ${cartId}`);
+  await fetch(`/api/cart/${cartId}/order`, {
+    method: 'POST',
+  });
 }
 
 (async () => {
@@ -104,6 +146,10 @@ async function getProducts() {
       addProductsToCart(event.target.id);
     });
   });
+  document.getElementById('checkout').addEventListener('click', (event) => {});
+  if (username) {
+    updateCartView();
+  }
 })();
 
 function redireccionar(pagina) {

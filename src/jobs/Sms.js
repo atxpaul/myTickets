@@ -2,7 +2,7 @@ import twilio from 'twilio';
 import config from '../config/config.js';
 import logger from '../config/logger.js';
 
-class Whatsapper {
+class Sms {
   constructor() {
     const accountSid = config.twilio.accountSid;
     const authToken = config.twilio.authToken;
@@ -10,12 +10,12 @@ class Whatsapper {
     this.client = twilio(accountSid, authToken);
   }
 
-  async sendOrderNoticeToAdministrator(user) {
+  async sendOrderNoticeToCustomer(user) {
     try {
       const message = await this.client.messages.create({
-        body: `New order by ${user.name} - ${user.username}`,
-        from: `whatsapp:${config.whatsappFrom}`,
-        to: `whatsapp:${config.adminPhone}`,
+        body: `New order received for ${user.name} - ${user.username}, in process right now!`,
+        from: config.twilio.numberFrom,
+        to: user.phone,
       });
       logger.info(message);
     } catch (error) {
@@ -24,4 +24,4 @@ class Whatsapper {
   }
 }
 
-export default Whatsapper;
+export default Sms;

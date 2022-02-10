@@ -46,6 +46,7 @@ const config = {
   },
   twilio: {
     numberFrom: process.env.TWILIO_FROM,
+    whatsappFrom: process.env.TWILIO_FROM_WHATSAPP,
     accountSid: process.env.TWILIO_SID,
     authToken: process.env.TWILIO_TOKEN,
   },

@@ -1,6 +1,7 @@
 import { cartDao, productDao } from '../dao/index.js';
 import Mailer from '../jobs/Mailer.js';
 import Whatsapper from '../jobs/Whatsapper.js';
+import Sms from '../jobs/Sms.js';
 import logger from '../config/logger.js';
 
 class CartController {
@@ -94,13 +95,14 @@ class CartController {
     logger.info(`Processing request: ${method}-${originalUrl}`);
     const id = req.params.id;
     const user = req.user;
+    let soldProduct;
     if (!user) {
       res.json({ error: 'No user is logged' });
     }
     const cart = await cartDao.getById(id);
     let listOfProductsForNewOrder = [];
-    for (let product in cart.products) {
-      let soldProduct = await productDao.getById(product);
+    for (let product of cart.products) {
+      soldProduct = await productDao.getById(product);
 
       let productTransformed = {
         title: soldProduct.title,
@@ -112,6 +114,8 @@ class CartController {
     mailer.sendNewOrderNotification(user, listOfProductsForNewOrder);
     const whatsapper = new Whatsapper();
     whatsapper.sendOrderNoticeToAdministrator(user);
+    const sms = new Sms();
+    sms.sendOrderNoticeToCustomer(user);
     res.json({ success: 'New order created for user' });
     try {
       await cartDao.deleteById(id);

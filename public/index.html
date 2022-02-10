@@ -39,8 +39,28 @@
             </li>
           </ul>
           <div id="login">
-            <p id="loginp" class="mr-3 mt-3 text-decoration-none text-light">Welcome, Persona</p>
-            <a id="logina" href="/api/users/login" class="btn btn-primary my-2 my-sm-0">Login</a>
+            <div class="navbar" id="menuUsuario">
+              <ul class="navbar-nav navbar-right">
+                <!-- Botón desplegable/Submenú -->
+                <li class="nav-item dropdown">
+                  <a href="#" class="nav-link" id="navbarUserDropdown" data-toggle="dropdown">
+                    <p id="user">Hello Persona</p>
+                  </a>
+                  <div id="displayCheckout" class="hidden" aria-labelledby="navbarDropdown">
+                    <button onclick="checkoutNewOrder()" id="checkout" class="dropdown-item hidden">Checkout Order</button>
+                    <div id="cart">
+                    
+                    </div>
+                  </div>
+                  
+                </li>
+                
+              </ul>
+              <div class="w-10" *ngIf="identity && identity.user.image">
+                  <a id="logina" href="/api/users/login" class="btn btn-primary my-2 my-sm-0">Login</a>
+              </div>
+          
+            </div>
           </div>
           
           
