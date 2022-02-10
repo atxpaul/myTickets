@@ -54,11 +54,16 @@ const commandLineArgs = process.argv.slice(2);
 
 const { mode, cpu, _ } = parseArgs(commandLineArgs, options);
 
-function connectServer() {
+async function connectServer() {
   const PORT = process.env.PORT || 8080;
 
   const server = app.listen(PORT, () => {
-    mongoose.connect(config.mongodb.url, config.mongodb.options);
+    try {
+      mongoose.connect(config.mongodb.url, config.mongodb.options);
+    } catch (err) {
+      logger.error(err);
+    }
+
     logger.info(
       `
       ###################################################
@@ -71,7 +76,7 @@ function connectServer() {
   });
   server.on('error', (error) => logger.error(`Error on server ${error}`));
 }
-
+logger.info(`Starting on mode ${mode}`);
 if (mode === 'cluster') {
   if (cluster.isPrimary) {
     logger.info(`Starting instancies on ${cpu} CPUs`);
@@ -91,6 +96,8 @@ if (mode === 'cluster') {
       );
       cluster.fork();
     });
+  } else {
+    connectServer();
   }
 } else {
   connectServer();
