@@ -13,6 +13,10 @@ async function getUserLogin() {
     salute.innerText = `Welcome, ${data.user.name}`;
     login.innerText = `Logout`;
     login.setAttribute('href', '/api/users/logout');
+  } else {
+    salute.innerText = `Welcome, visitor`;
+    login.innerText = `Login`;
+    login.setAttribute('href', '/api/users/login');
   }
 }
 

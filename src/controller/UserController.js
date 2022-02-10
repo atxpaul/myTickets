@@ -18,8 +18,7 @@ class UserController {
     const mailer = new Mailer();
     logger.info(`Processing request: ${method}-${originalUrl}`);
     mailer.sendSignupNotification(user);
-    //res.redirect('/login.html');
-    res.status(200).json({ name: user.name, username: user.username });
+    res.redirect('/');
   };
 
   getHome = async (req, res) => {
