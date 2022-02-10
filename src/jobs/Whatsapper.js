@@ -14,8 +14,8 @@ class Whatsapper {
     try {
       const message = await this.client.messages.create({
         body: `New order by ${user.name} - ${user.username}`,
-        from: `whatsapp:${config.whatsappFrom}`,
-        to: `whatsapp:${config.adminPhone}`,
+        from: `whatsapp:${config.twilio.whatsappFrom}`,
+        to: `whatsapp:${config.twilio.adminPhone}`,
       });
       logger.info(message);
     } catch (error) {
