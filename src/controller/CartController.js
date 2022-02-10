@@ -1,5 +1,6 @@
 import { cartDao, productDao } from '../dao/index.js';
 import Mailer from '../jobs/Mailer.js';
+import Whatsapper from '../jobs/Whatsapper.js';
 
 class CartController {
   constructor() {}
@@ -85,6 +86,8 @@ class CartController {
     }
     const mailer = new Mailer();
     mailer.sendNewOrderNotification(user, listOfProductsForNewOrder);
+    const whatsapper = new Whatsapper();
+    whatsapper.sendOrderNoticeToAdministrator(user);
     res.json({ success: 'New order created for user' });
   };
 

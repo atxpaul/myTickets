@@ -115,4 +115,4 @@ db/
 
 # Uploads
 
-uploads/
+uploads/*.jpg

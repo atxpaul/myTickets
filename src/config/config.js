@@ -3,6 +3,7 @@ dotenv.config();
 
 const config = {
   adminMail: process.env.ADMIN_MAIL,
+  adminPhone: process.env.ADMIN_PHONE,
   isAdmin: true,
   storage: 'firebase',
   mongodb: {
@@ -42,6 +43,11 @@ const config = {
   gmail: {
     sender: process.env.GMAIL_USER,
     password: process.env.GMAIL_PASSWORD,
+  },
+  twilio: {
+    numberFrom: process.env.TWILIO_FROM,
+    accountSid: process.env.TWILIO_SID,
+    authToken: process.env.TWILIO_TOKEN,
   },
 };
 export default config;
