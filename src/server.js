@@ -7,12 +7,21 @@ import productRouter from './router/productRouter.js';
 import cartRouter from './router/cartRouter.js';
 import userRouter from './router/userRouter.js';
 
+import session from 'express-session';
+import mongoose from 'mongoose';
+import passport from './middleware/passport.js';
+import config from './config/config.js';
+
 import logger from './config/logger.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session(config.session));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
@@ -49,6 +58,7 @@ function connectServer() {
   const PORT = process.env.PORT || 8080;
 
   const server = app.listen(PORT, () => {
+    mongoose.connect(config.mongodb.url, config.mongodb.options);
     logger.info(
       `
       ###################################################

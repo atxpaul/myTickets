@@ -1,6 +1,8 @@
 const salute = document.getElementById('loginp');
 const login = document.getElementById('logina');
 const productsDiv = document.getElementById('products');
+let cartId = undefined;
+let username;
 
 async function getUserLogin() {
   const userRaw = await fetch('/api/users/home', {
@@ -13,11 +15,54 @@ async function getUserLogin() {
     salute.innerText = `Welcome, ${data.user.name}`;
     login.innerText = `Logout`;
     login.setAttribute('href', '/api/users/logout');
+    return data.user.username;
   } else {
     salute.innerText = `Welcome, visitor`;
     login.innerText = `Login`;
     login.setAttribute('href', '/api/users/login');
+    return undefined;
   }
+}
+
+async function addProductsToCart(productId) {
+  if (!username) {
+    goLogin();
+  }
+  let data = { productId: productId };
+
+  console.log(`Trying to add product ${productId} to cart ${cartId}`);
+  console.log(`Product in JSON ${data}`);
+  // const cartRaw = await fetch(`/api/cart/${cartId}/products`, {
+  //   method: 'POST',
+  //   body: { productId: productId },
+  // });
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', `/api/cart/${cartId}/products`, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(
+    JSON.stringify({
+      productId: productId,
+    })
+  );
+  console.log(cartRaw);
+}
+
+async function createNewCart() {
+  const cartRaw = await fetch('/api/cart/', {
+    method: 'POST',
+  });
+  cartId = await cartRaw.json();
+
+  if (isEmpty(cartId)) cartId = 0;
+}
+
+async function getCartsByUser() {
+  const cart = await fetch(`/api/cart/`, {
+    method: 'GET',
+  });
+  try {
+    cartId = await cart.json();
+  } catch (err) {}
 }
 
 async function getProducts() {
@@ -33,8 +78,8 @@ async function getProducts() {
           <div class="card-body">
             <h3 class="card-title">${products[i].title}</h3>
             <p class="card-text">${products[i].price}</p>
-            <a href="" class="btn btn-sm btn-primary mt-auto">Comprar</a>
-            <a href="" class="btn btn-sm btn-secondary mt-auto">Detalles</a>
+            <button id="${products[i].id}" class="buy-button btn btn-sm btn-primary mt-auto">Comprar</button>
+            <a href="/api/test/${products[i].id}" class="btn btn-sm btn-secondary mt-auto">Detalles</a>
           </div>
         </div>
       </div>`;
@@ -45,6 +90,26 @@ async function getProducts() {
 }
 
 (async () => {
-  getUserLogin();
-  getProducts();
+  username = await getUserLogin();
+  if (username) {
+    await getCartsByUser();
+
+    if (cartId == null) {
+      await createNewCart();
+    }
+  }
+  await getProducts();
+  document.querySelectorAll('.buy-button').forEach((item) => {
+    item.addEventListener('click', (event) => {
+      addProductsToCart(event.target.id);
+    });
+  });
 })();
+
+function redireccionar(pagina) {
+  location.href = pagina;
+}
+
+function goLogin() {
+  redireccionar('/api/users/login');
+}

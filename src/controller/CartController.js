@@ -1,12 +1,27 @@
 import { cartDao, productDao } from '../dao/index.js';
 import Mailer from '../jobs/Mailer.js';
 import Whatsapper from '../jobs/Whatsapper.js';
+import logger from '../config/logger.js';
 
 class CartController {
   constructor() {}
 
   createNewCart = async (req, res) => {
-    const id = await cartDao.save({ timestamp: Date.now(), products: [] });
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
+    const username = req.user.username;
+    let id;
+    if (username) {
+      id = await cartDao.save({
+        username: username,
+        timestamp: Date.now(),
+        products: [],
+      });
+    } else {
+      logger.warn('Error creating cart because there is not username');
+      return res.json({ error: 'Error on creating cart: Not username' });
+    }
+
     if (id) {
       return res.json(id);
     } else {
@@ -15,6 +30,8 @@ class CartController {
   };
 
   deleteCartById = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     const id = req.params.id;
     const cartToDelete = await cartDao.getById(id);
     if (cartToDelete) {
@@ -26,6 +43,8 @@ class CartController {
   };
 
   getProductsByCart = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     let cartProductsId;
     const id = req.params.id;
 
@@ -48,11 +67,14 @@ class CartController {
   };
 
   addProductsToCart = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     const id = req.params.id;
     const newProductId = req.body.productId;
+    logger.warn(req.body);
     const cart = await cartDao.getById(id);
     const product = await productDao.getById(newProductId);
-
+    logger.info(`Attempting to add ${newProductId} to ${id}`);
     if (product.id) {
       if (cart.products) {
         cart.products.push(newProductId);
@@ -68,6 +90,8 @@ class CartController {
   };
 
   createNewOrderFromCart = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     const id = req.params.id;
     const user = req.user;
     if (!user) {
@@ -89,9 +113,16 @@ class CartController {
     const whatsapper = new Whatsapper();
     whatsapper.sendOrderNoticeToAdministrator(user);
     res.json({ success: 'New order created for user' });
+    try {
+      await cartDao.deleteById(id);
+    } catch (err) {
+      logger.error(err);
+    }
   };
 
   removeProductFromCartById = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
     const id = req.params.id;
     const productIdToDelete = req.params.id_product;
     const cart = await cartDao.getById(id);
@@ -108,6 +139,25 @@ class CartController {
     } else {
       res.json({ error: 'Cart was already empty' });
     }
+  };
+
+  //TD -> We need to improve this function for filtering by user instead use getAll
+  //We assume that there will be only 1 cart per user. Cart will be deleted after creating order.
+  getCartsByUser = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
+    const username = req.user.username;
+    logger.info(`Recovering cart for user ${username}`);
+
+    const carts = await cartDao.getAll();
+    let id;
+    for (let cart of carts) {
+      if (cart.username == username) {
+        id = cart.id;
+      }
+    }
+    logger.info(`Recovering cart ${id}`);
+    res.json(id);
   };
 }
 

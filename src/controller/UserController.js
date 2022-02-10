@@ -25,7 +25,7 @@ class UserController {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
     const user = req.user;
-    logger.info(`Sending user data ${user}`);
+    logger.info(`Sending user data`);
     res.status(200).json({ user });
   };
 

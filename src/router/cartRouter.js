@@ -1,6 +1,7 @@
 import express from 'express';
 
 import controller from '../controller/CartController.js';
+import checkAuthentication from '../middleware/checkAuthentication.js';
 
 const { Router } = express;
 const router = new Router();
@@ -16,5 +17,6 @@ router.delete(
   '/:id/products/:id_product',
   cartController.removeProductFromCartById
 );
+router.get('/', checkAuthentication, cartController.getCartsByUser);
 
 export default router;
