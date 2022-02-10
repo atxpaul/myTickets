@@ -11,6 +11,9 @@ class Sms {
   }
 
   async sendOrderNoticeToCustomer(user) {
+    logger.info(
+      `Trying to send Whatsapp from ${config.twilio.numberFrom} to ${user.phone}`
+    );
     try {
       const message = await this.client.messages.create({
         body: `New order received for ${user.name} - ${user.username}, in process right now!`,

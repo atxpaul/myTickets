@@ -11,11 +11,14 @@ class Whatsapper {
   }
 
   async sendOrderNoticeToAdministrator(user) {
+    logger.info(
+      `Trying to send Whatsapp from ${config.twilio.whatsappFrom} to ${config.twilio.adminPhone}`
+    );
     try {
       const message = await this.client.messages.create({
         body: `New order by ${user.name} - ${user.username}`,
         from: `whatsapp:${config.twilio.whatsappFrom}`,
-        to: `whatsapp:${config.twilio.adminPhone}`,
+        to: `whatsapp:${config.adminPhone}`,
       });
       logger.info(message);
     } catch (error) {
