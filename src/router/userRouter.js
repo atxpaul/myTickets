@@ -1,34 +1,40 @@
-import express from 'express';
-
+import logger from '../config/logger.js';
 import upload from '../middleware/multer.js';
 import passport from '../middleware/passport.js';
 import checkAuthentication from '../middleware/checkAuthentication.js';
-import controller from '../controller/UserController.js';
+import UserController from '../controller/UserController.js';
 
-const { Router } = express;
-const router = new Router();
+class UserRouter {
+  constructor(express) {
+    this.express = express;
+    this.router = this.express.Router();
+    this.userController = new UserController();
+  }
 
-const userController = new controller();
+  start() {
+    logger.info(`Starting Users Router`);
+    this.router.post(
+      '/login',
+      passport.authenticate('login', {
+        failureMessage: true,
+      }),
+      this.userController.postLogin
+    );
 
-router.post(
-  '/login',
-  passport.authenticate('login', {
-    failureMessage: true,
-  }),
-  userController.postLogin
-);
+    this.router.post(
+      '/signup',
+      upload.single('avatar'),
+      passport.authenticate('signup', { failureMessage: true }),
+      this.userController.postSignup
+    );
 
-router.post(
-  '/signup',
-  upload.single('avatar'),
-  passport.authenticate('signup', { failureMessage: true }),
-  userController.postSignup
-);
+    this.router.get('/login', this.userController.getLogin);
+    this.router.get('/signup', this.userController.getSignup);
+    this.router.get('/home', checkAuthentication, this.userController.getHome);
+    this.router.get('/logout', this.userController.getLogout);
+    this.router.get('/userimage/:image', this.userController.getImageFile);
+    return this.router;
+  }
+}
 
-router.get('/login', userController.getLogin);
-router.get('/signup', userController.getSignup);
-router.get('/home', checkAuthentication, userController.getHome);
-router.get('/logout', userController.getLogout);
-router.get('/userimage/:image', userController.getImageFile);
-
-export default router;
+export default UserRouter;

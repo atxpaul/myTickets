@@ -1,22 +1,32 @@
-import express from 'express';
-
-import controller from '../controller/CartController.js';
+import logger from '../config/logger.js';
+import CartController from '../controller/CartController.js';
 import checkAuthentication from '../middleware/checkAuthentication.js';
 
-const { Router } = express;
-const router = new Router();
+class CartRouter {
+  constructor(express) {
+    this.express = express;
+    this.router = this.express.Router();
+    this.cartController = new CartController();
+  }
 
-const cartController = new controller();
+  start() {
+    logger.info(`Starting Carts Router`);
+    this.router.post('/', this.cartController.createNewCart);
+    this.router.delete('/:id', this.cartController.deleteCartById);
+    this.router.get('/:id/products', this.cartController.getProductsByCart);
+    this.router.post('/:id/products', this.cartController.addProductsToCart);
+    this.router.post('/:id/order', this.cartController.createNewOrderFromCart);
+    this.router.delete(
+      '/:id/products/:id_product',
+      this.cartController.removeProductFromCartById
+    );
+    this.router.get(
+      '/',
+      checkAuthentication,
+      this.cartController.getCartsByUser
+    );
+    return this.router;
+  }
+}
 
-router.post('/', cartController.createNewCart);
-router.delete('/:id', cartController.deleteCartById);
-router.get('/:id/products', cartController.getProductsByCart);
-router.post('/:id/products', cartController.addProductsToCart);
-router.post('/:id/order', cartController.createNewOrderFromCart);
-router.delete(
-  '/:id/products/:id_product',
-  cartController.removeProductFromCartById
-);
-router.get('/', checkAuthentication, cartController.getCartsByUser);
-
-export default router;
+export default CartRouter;

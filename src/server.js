@@ -1,43 +1,12 @@
-import express from 'express';
 import parseArgs from 'minimist';
 import cluster from 'cluster';
 import os from 'os';
 
-import productRouter from './router/productRouter.js';
-import cartRouter from './router/cartRouter.js';
-import userRouter from './router/userRouter.js';
+import app from './loader/app.js';
 
-import session from 'express-session';
 import mongoose from 'mongoose';
-import passport from './middleware/passport.js';
 import config from './config/config.js';
-
 import logger from './config/logger.js';
-
-const app = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(session(config.session));
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use('/api/products', productRouter);
-app.use('/api/cart', cartRouter);
-app.use('/api/users', userRouter);
-app.use(express.static('public'));
-
-app.use((req, res) => {
-  const { url, method } = req;
-  if (url != '/favicon.ico') {
-    logger.warn(`Route ${method}-${url} not implemented`);
-  }
-  res.json({
-    error: -2,
-    description: `Route ${req.url} not implemented`,
-  });
-});
 
 const options = {
   alias: {

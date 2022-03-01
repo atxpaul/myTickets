@@ -1,15 +1,21 @@
-import express from 'express';
+import logger from '../config/logger.js';
+import ProductController from '../controller/ProductController.js';
 
-import controller from '../controller/ProductController.js';
+class ProductRouter {
+  constructor(express) {
+    this.express = express;
+    this.router = this.express.Router();
+    this.productController = new ProductController();
+  }
 
-const { Router } = express;
-const router = new Router();
+  start() {
+    logger.info(`Starting Products Router`);
+    this.router.get('/:id?', this.productController.getProducts);
+    this.router.post('/', this.productController.addNewProduct);
+    this.router.put('/:id', this.productController.updateProductById);
+    this.router.delete('/:id', this.productController.deleteProductById);
+    return this.router;
+  }
+}
 
-const productController = new controller();
-
-router.get('/:id?', productController.getProducts);
-router.post('/', productController.addNewProduct);
-router.put('/:id', productController.updateProductById);
-router.delete('/:id', productController.deleteProductById);
-
-export default router;
+export default ProductRouter;
