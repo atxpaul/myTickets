@@ -1,6 +1,7 @@
-import { productDao } from '../dao/index.js';
+import { productDao } from '../dao/ProductDaoFactory.js';
 import config from '../config/config.js';
 import logger from '../config/logger.js';
+import Product from '../model/Product.js';
 
 class ProductController {
   constructor() {}
@@ -26,24 +27,14 @@ class ProductController {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
     if (config.isAdmin) {
-      const product = req.body;
-      if (
-        product.hasOwnProperty('price') &&
-        product.hasOwnProperty('thumbnail') &&
-        product.hasOwnProperty('title')
-      ) {
-        product.timestamp = Date.now();
-        const id = await productDao.save(product);
-        if (id) {
-          return res.json(await productDao.getById(id));
-        } else {
-          return res.json({ error: 'Error on saving product' });
-        }
+      const { title, price, thumbnail } = req.body;
+      const timestamp = Date.now();
+      const product = new Product(title, price, thumbnail, timestamp);
+      const id = await productDao.save(JSON.parse(JSON.stringify(product)));
+      if (id) {
+        return res.json(await productDao.getById(id));
       } else {
-        return res.json({
-          error: -1,
-          description: 'Invalid product, check keys and properties',
-        });
+        return res.json({ error: 'Error on saving product' });
       }
     } else {
       return res.json({
@@ -58,8 +49,13 @@ class ProductController {
     logger.info(`Processing request: ${method}-${originalUrl}`);
     if (config.isAdmin) {
       const id = req.params.id;
-      const product = req.body;
-      const updatedProduct = await productDao.updateById(id, product);
+      const { title, price, thumbnail } = req.body;
+      const timestamp = Date.now();
+      const product = new Product(title, price, thumbnail, timestamp);
+      const updatedProduct = await productDao.updateById(
+        id,
+        JSON.parse(JSON.stringify(product))
+      );
       if (updatedProduct) {
         return res.json(updatedProduct);
       } else {

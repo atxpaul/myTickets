@@ -1,5 +1,4 @@
 import admin from 'firebase-admin';
-import fs from 'fs';
 import config from '../config/config.js';
 import logger from '../config/logger.js';
 

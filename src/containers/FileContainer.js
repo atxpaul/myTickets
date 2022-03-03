@@ -1,5 +1,5 @@
 import fs from 'fs';
-import logger from '../config/logger';
+import logger from '../config/logger.js';
 
 class FileContainer {
   constructor(fileName) {
@@ -87,7 +87,8 @@ class FileContainer {
 
   async deleteById(id) {
     let content = await this.getAll();
-    content = content.filter((c) => c.id !== id);
+    content = content.filter((c) => c.id !== Number(id));
+    logger.info(id, content);
     const json = JSON.stringify(content, null, 4);
     try {
       await fs.promises.writeFile(this.fileName, json, 'utf-8');
