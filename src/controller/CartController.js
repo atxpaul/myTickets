@@ -1,4 +1,5 @@
-import { cartDao, productDao } from '../dao/index.js';
+import { cartDao } from '../dao/CartDaoFactory.js';
+import { productDao } from '../dao/ProductDaoFactory.js';
 import Mailer from '../jobs/Mailer.js';
 import Whatsapper from '../jobs/Whatsapper.js';
 import Sms from '../jobs/Sms.js';
