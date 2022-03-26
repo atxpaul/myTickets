@@ -11,6 +11,7 @@ class ProductController {
     logger.info(`Processing request: ${method}-${originalUrl}`);
     if (req.params.id) {
       const id = req.params.id;
+      logger.info(`Retrieving data for product ${id}`);
       const product = await productDao.getById(id);
       if (product && product.length != 0) {
         return res.json(product);
@@ -18,6 +19,7 @@ class ProductController {
         return res.json({ error: 'Product not found' });
       }
     } else {
+      logger.info(`Retrieving data for all products`);
       const products = await productDao.getAll();
       return res.json(products);
     }
@@ -27,9 +29,20 @@ class ProductController {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
     if (config.isAdmin) {
+      let product;
       const { title, price, thumbnail } = req.body;
       const timestamp = Date.now();
-      const product = new Product(title, price, thumbnail, timestamp);
+      const newProductId = Math.random().toString(36).slice(2);
+      logger.info(
+        `Creating new product ${
+          (newProductId, title, price, thumbnail, timestamp)
+        }`
+      );
+      try {
+        product = new Product(newProductId, title, price, thumbnail, timestamp);
+      } catch (error) {
+        logger.error(error);
+      }
       const id = await productDao.save(JSON.parse(JSON.stringify(product)));
       if (id) {
         return res.json(await productDao.getById(id));
@@ -49,9 +62,12 @@ class ProductController {
     logger.info(`Processing request: ${method}-${originalUrl}`);
     if (config.isAdmin) {
       const id = req.params.id;
+      console.log(id);
       const { title, price, thumbnail } = req.body;
       const timestamp = Date.now();
-      const product = new Product(title, price, thumbnail, timestamp);
+      const product = new Product(id, title, price, thumbnail, timestamp);
+      console.log(product);
+      logger.info(`Updating product ${id}`);
       const updatedProduct = await productDao.updateById(
         id,
         JSON.parse(JSON.stringify(product))

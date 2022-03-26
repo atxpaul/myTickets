@@ -7,13 +7,13 @@ let server;
 
 const productInsert = {
   title: 'Bolígrafo',
-  price: '3.5',
+  price: 3.5,
   thumbnail: 'https://cdn3.iconfinder.com/data/icons/vol-4/128/pen-256.png',
 };
 
 const productUpdate = {
   title: 'Lápiz',
-  price: '1.5',
+  price: 1.5,
   thumbnail:
     'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-512.png',
 };
@@ -32,28 +32,28 @@ describe('Ciclo Test CRUD Productos', () => {
     server.close();
   });
 
-  describe('POST', () => {
-    it('Añadir un producto', async () => {
+  describe('POST - PRODUCT', () => {
+    it('Add 1 product', async () => {
       const response = await request.post('/').send(productInsert);
       expect(response.status).to.eql(200);
 
       const product = response.body;
-      expect(product).to.include.keys('title', 'price', 'thumbnail');
+      id = product.id;
+      expect(product).to.include.keys('id', 'title', 'price', 'thumbnail');
       expect(product.title).to.eql(productInsert.title);
       expect(product.price).to.eql(productInsert.price);
       expect(product.thumbnail).to.eql(productInsert.thumbnail);
-      id = product.id;
     });
   });
 
-  describe('GET', () => {
-    it('Listar productos', async () => {
+  describe('GET - PRODUCT', () => {
+    it('Read all products', async () => {
       const response = await request.get('/');
       expect(response.status).to.eql(200);
       const products = response.body;
       expect(products).not.to.be.empty;
     });
-    it('Listar producto por ID', async () => {
+    it('Read product by ID', async () => {
       const response = await request.get(`/${id}`);
       expect(response.status).to.eql(200);
       const product = response.body;
@@ -64,8 +64,8 @@ describe('Ciclo Test CRUD Productos', () => {
     });
   });
 
-  describe('PUT', () => {
-    it('Actualizar un producto', async () => {
+  describe('PUT - PRODUCT', () => {
+    it('Update a product', async () => {
       const response = await request.put(`/${id}`).send(productUpdate);
       expect(response.status).to.eql(200);
 
@@ -77,8 +77,8 @@ describe('Ciclo Test CRUD Productos', () => {
     });
   });
 
-  describe('DELETE', () => {
-    it('Borrar un producto', async () => {
+  describe('DELETE - PRODUCT', () => {
+    it('Delete a product', async () => {
       const response = await request.delete(`/${id}`);
       expect(response.status).to.eql(200);
 

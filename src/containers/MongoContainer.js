@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import config from '../config/config.js';
+import logger from '../config/logger.js';
 
 await mongoose.connect(config.mongodb.url, config.mongodb.options);
 
@@ -15,23 +16,24 @@ class MongoContainer {
     } catch (err) {
       logger.error(err);
     }
-    return insert;
+    return insert.id;
   }
 
   async updateById(id, newObject) {
-    let update;
+    let data;
     try {
-      update = await this.collection.findByIdAndUpdate({ _id: id }, newObject);
+      await this.collection.findOneAndUpdate({ id: id }, newObject);
+      data = this.getById(id);
     } catch (err) {
       logger.error(err);
     }
-    return update;
+    return data;
   }
 
   async getById(id) {
     let object;
     try {
-      object = await this.collection.findOne({ _id: id });
+      object = await this.collection.findOne({ id: id });
     } catch (err) {}
     return object;
   }
@@ -45,7 +47,7 @@ class MongoContainer {
   }
 
   async deleteById(id) {
-    await this.collection.findOneAndDelete({ _id: id });
+    await this.collection.findOneAndDelete({ id: id });
   }
 
   async deleteAll() {

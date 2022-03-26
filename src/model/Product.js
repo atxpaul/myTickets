@@ -1,13 +1,24 @@
 class Product {
+  #id;
   #title;
   #price;
   #thumbnail;
   #timestamp;
-  constructor(title, price, thumbnail, timestamp) {
+  constructor(id, title, price, thumbnail, timestamp) {
+    this.id = this.setId(id);
     this.title = this.setTitle(title);
     this.price = this.setPrice(price);
     this.thumbnail = this.setThumbnail(thumbnail);
     this.timestamp = this.setTimestamp(timestamp);
+  }
+
+  setId(id) {
+    if (id) {
+      this.id = id;
+      return id;
+    } else {
+      throw Error(`Missing field id for create product`);
+    }
   }
 
   setTitle(title) {
