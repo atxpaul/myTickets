@@ -28,8 +28,6 @@ class UserRouter {
       this.userController.postSignup
     );
 
-    this.router.get('/login', this.userController.getLogin);
-    this.router.get('/signup', this.userController.getSignup);
     this.router.get('/home', checkAuthentication, this.userController.getHome);
     this.router.get('/logout', this.userController.getLogout);
     this.router.get('/userimage/:image', this.userController.getImageFile);

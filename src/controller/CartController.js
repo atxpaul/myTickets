@@ -1,8 +1,6 @@
 import { cartDao } from '../dao/CartDaoFactory.js';
 import { productDao } from '../dao/ProductDaoFactory.js';
 import Mailer from '../jobs/Mailer.js';
-import Whatsapper from '../jobs/Whatsapper.js';
-import Sms from '../jobs/Sms.js';
 import logger from '../config/logger.js';
 
 class CartController {
@@ -113,10 +111,6 @@ class CartController {
     }
     const mailer = new Mailer();
     mailer.sendNewOrderNotification(user, listOfProductsForNewOrder);
-    const whatsapper = new Whatsapper();
-    whatsapper.sendOrderNoticeToAdministrator(user);
-    const sms = new Sms();
-    sms.sendOrderNoticeToCustomer(user);
     res.json({ success: 'New order created for user' });
     try {
       await cartDao.deleteById(id);

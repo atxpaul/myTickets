@@ -3,22 +3,29 @@ import Mailer from '../jobs/Mailer.js';
 import fs from 'fs';
 import path from 'path';
 
+import { generateToken } from '../utils/generateJwt.js';
+
 class UserController {
   constructor() {}
 
   postLogin = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    res.redirect('/home.html');
+    const username = req.body.username;
+    const jwt = generateToken(username);
+    res.status(200).json({ username, jwt });
   };
 
   postSignup = async (req, res) => {
     const { originalUrl, method } = req;
     const user = req.user;
+    logger.info(user);
     const mailer = new Mailer();
     logger.info(`Processing request: ${method}-${originalUrl}`);
     mailer.sendSignupNotification(user);
-    res.redirect('/');
+    const username = req.body.username;
+    const jwt = generateToken(username);
+    res.status(200).json({ username, jwt });
   };
 
   getHome = async (req, res) => {
@@ -29,23 +36,11 @@ class UserController {
     res.status(200).json({ user });
   };
 
-  getLogin = async (req, res) => {
-    const { originalUrl, method } = req;
-    logger.info(`Processing request: ${method}-${originalUrl}`);
-    res.redirect('/login.html');
-  };
-
-  getSignup = async (req, res) => {
-    const { originalUrl, method } = req;
-    logger.info(`Processing request: ${method}-${originalUrl}`);
-    res.redirect('/signup.html');
-  };
-
   getLogout = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
     req.session.destroy();
-    res.redirect('/logout.html');
+    res.status(200);
   };
 
   getImageFile = async (req, res) => {

@@ -1,12 +1,9 @@
 import passport from 'passport';
+
 import bCrypt from 'bcrypt';
 import LocalStrategy from 'passport-local';
-import User from '../model/UserModel.js';
+import User from '../model/User.js';
 import logger from '../config/logger.js';
-import mongoose from 'mongoose';
-import config from '../config/config.js';
-
-mongoose.connect(config.mongodb.url, config.mongodb.options);
 
 passport.use(
   'signup',
@@ -30,7 +27,6 @@ passport.use(
         const newUser = {
           username: username,
           password: createHash(password),
-          email: req.body.email,
           name: req.body.name,
           surname: req.body.surname,
           address: req.body.address,
@@ -39,7 +35,6 @@ passport.use(
           profilePic: req.file.filename,
         };
 
-        //logger.info(req.file.originalname);
         logger.info(newUser);
         User.create(newUser, (err, userWithId) => {
           if (err) {
@@ -83,6 +78,11 @@ passport.deserializeUser((id, done) => {
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
+
+function generateToken(user) {
+  const token = jwt.sign({ data: user }, JWT_SECRET, { expiresIn: '24h' });
+  return token;
+}
 
 function isValidPassword(user, password) {
   return bCrypt.compareSync(password, user.password);
