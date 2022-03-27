@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/server.js",
   "scripts": {
-    "test": "mocha test/*.test.js",
+    "test": "mocha test/usersApi.test.js",
     "start": "node ."
   },
   "repository": {
