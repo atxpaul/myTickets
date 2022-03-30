@@ -1,7 +1,9 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
 import app from '../src/loader/app.js';
-import path from 'path';
+import config from '../src/config/config.js';
+import mongoose from 'mongoose';
+import User from '../src/model/User.js';
 
 let request;
 let server;
@@ -30,31 +32,33 @@ describe('Ciclo Test Users', () => {
   });
 
   after(function () {
+    console.log('Deleting data');
+    deleteUserFromDb();
     server.close();
   });
 
-  //   describe('USER SIGNUP', () => {
-  //     it('Signup user and get bearer token', async () => {
-  //       const response = await request
-  //         .post('/signup')
-  //         .field('username', userSignup.username)
-  //         .field('password', userSignup.password)
-  //         .field('name', userSignup.name)
-  //         .field('surname', userSignup.surname)
-  //         .field('address', userSignup.address)
-  //         .field('age', userSignup.age)
-  //         .field('phone', userSignup.phone)
-  //         .attach('profilePic', 'uploads/linkedin.jpg');
+  describe('USER SIGNUP', () => {
+    it('Signup user and get bearer token', async () => {
+      const response = await request
+        .post('/signup')
+        .field('username', userSignup.username)
+        .field('password', userSignup.password)
+        .field('name', userSignup.name)
+        .field('surname', userSignup.surname)
+        .field('address', userSignup.address)
+        .field('age', userSignup.age)
+        .field('phone', userSignup.phone)
+        .attach('avatar', 'uploads/linkedin.jpg');
 
-  //       expect(response.status).to.eql(200);
+      expect(response.status).to.eql(200);
 
-  //       const user = response.body;
-  //       jwt = `Bearer ${user.jwt}`;
-  //       expect(user).to.include.keys('username', 'jwt');
-  //       expect(user.username).to.eql(userLogin.username);
-  //       expect(user.jwt).to.have.lengthOf.above(10);
-  //     });
-  //   });
+      const user = response.body;
+      jwt = `Bearer ${user.jwt}`;
+      expect(user).to.include.keys('username', 'jwt');
+      expect(user.username).to.eql(userSignup.username);
+      expect(user.jwt).to.have.lengthOf.above(10);
+    });
+  });
 
   describe('USER LOGIN', () => {
     it('Login user and get bearer token', async () => {
@@ -102,4 +106,15 @@ async function startServer() {
       reject(error);
     });
   });
+}
+
+async function deleteUserFromDb() {
+  await new Promise((r) => setTimeout(r, 2000));
+  try {
+    mongoose.connect(config.mongodb.url, config.mongodb.options);
+  } catch (err) {
+    logger.error(err);
+  }
+
+  await User.deleteOne({ username: userSignup.username });
 }

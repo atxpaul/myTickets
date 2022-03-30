@@ -47,7 +47,7 @@ ${htmlForProductList}`,
   async sendEmail(mailOptions) {
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      logger.info(info);
+      logger.info(`Mail has been sent`);
     } catch (error) {
       logger.error(error);
     }
