@@ -1,5 +1,8 @@
 import logger from '../config/logger.js';
+import upload from '../middleware/multer.js';
+import checkAdmin from '../middleware/checkAdmin.js';
 import ProductController from '../controller/ProductController.js';
+import checkAuthentication from '../middleware/checkAuthentication.js';
 
 class ProductRouter {
   constructor(express) {
@@ -11,9 +14,16 @@ class ProductRouter {
   start() {
     logger.info(`Starting Products Router`);
     this.router.get('/:id?', this.productController.getProducts);
-    this.router.post('/', this.productController.addNewProduct);
+    this.router.post(
+      '/',
+      checkAuthentication,
+      checkAdmin,
+      upload.single('thumbnail'),
+      this.productController.addNewProduct
+    );
     this.router.put('/:id', this.productController.updateProductById);
     this.router.delete('/:id', this.productController.deleteProductById);
+    this.router.get('/images/:image', this.productController.getImageFile);
     return this.router;
   }
 }

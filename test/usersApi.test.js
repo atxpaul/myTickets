@@ -33,7 +33,7 @@ describe('Ciclo Test Users', () => {
 
   after(function () {
     console.log('Deleting data');
-    //deleteUserFromDb();
+    deleteUserFromDb();
     server.close();
   });
 
@@ -48,7 +48,7 @@ describe('Ciclo Test Users', () => {
         .field('address', userSignup.address)
         .field('age', userSignup.age)
         .field('phone', userSignup.phone)
-        .attach('avatar', 'uploads/linkedin.jpg');
+        .attach('avatar', 'test/images/shrug.jpg');
 
       expect(response.status).to.eql(200);
 
@@ -62,7 +62,6 @@ describe('Ciclo Test Users', () => {
 
   describe('USER LOGIN', () => {
     it('Login user and get bearer token', async () => {
-      await new Promise((r) => setTimeout(r, 1000));
       console.log(jwt);
       const response = await request.post('/login').send(userLogin);
       expect(response.status).to.eql(200);

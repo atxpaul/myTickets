@@ -2,6 +2,8 @@ import { productDao } from '../dao/ProductDaoFactory.js';
 import config from '../config/config.js';
 import logger from '../config/logger.js';
 import Product from '../model/Product.js';
+import fs from 'fs';
+import path from 'path';
 
 class ProductController {
   constructor() {}
@@ -28,32 +30,29 @@ class ProductController {
   addNewProduct = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    if (config.isAdmin) {
-      let product;
-      const { title, price, thumbnail } = req.body;
-      const timestamp = Date.now();
-      const newProductId = Math.random().toString(36).slice(2);
-      logger.info(
-        `Creating new product ${
-          (newProductId, title, price, thumbnail, timestamp)
-        }`
-      );
-      try {
-        product = new Product(newProductId, title, price, thumbnail, timestamp);
-      } catch (error) {
-        logger.error(error);
-      }
-      const id = await productDao.save(JSON.parse(JSON.stringify(product)));
-      if (id) {
-        return res.json(await productDao.getById(id));
-      } else {
-        return res.json({ error: 'Error on saving product' });
-      }
+    logger.info(req.file);
+    let product;
+    const { title, price } = req.body;
+    const thumbnail = req.file.filename;
+    logger.info(thumbnail);
+    const timestamp = Date.now();
+    logger.info({ title, price, thumbnail });
+    const newProductId = Math.random().toString(36).slice(2);
+    logger.info(
+      `Creating new product ${
+        (newProductId, title, price, thumbnail, timestamp)
+      }`
+    );
+    try {
+      product = new Product(newProductId, title, price, thumbnail, timestamp);
+    } catch (error) {
+      logger.error(error);
+    }
+    const id = await productDao.save(JSON.parse(JSON.stringify(product)));
+    if (id) {
+      return res.json(await productDao.getById(id));
     } else {
-      return res.json({
-        error: -1,
-        description: 'route post method addNewProduct not authorized',
-      });
+      return res.json({ error: 'Error on saving product' });
     }
   };
 
@@ -107,6 +106,22 @@ class ProductController {
       return res.json({
         error: -1,
         description: 'route delete method deleteProductById not authorized',
+      });
+    }
+  };
+
+  getImageFile = async (req, res) => {
+    const file = req.params.image;
+    const pathFile = './uploads/' + file;
+    logger.info(`Trying to get image ${pathFile}`);
+    let fileExists = fs.existsSync(pathFile);
+    if (fileExists) {
+      logger.info(`Sending image`);
+      return res.sendFile(path.resolve(pathFile));
+    } else {
+      logger.warn(`Image ${pathFile} not found!`);
+      return res.status(404).send({
+        message: 'File does not exists',
       });
     }
   };

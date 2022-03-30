@@ -5,10 +5,15 @@ import app from '../src/loader/app.js';
 let request;
 let server;
 
+const userLogin = {
+  username: 'admin@admin',
+  password: '1234',
+};
+
 const productInsert = {
   title: 'Bolígrafo',
   price: 3.5,
-  thumbnail: 'https://cdn3.iconfinder.com/data/icons/vol-4/128/pen-256.png',
+  thumbnail: 'shrug.jpg',
 };
 
 const productUpdate = {
@@ -19,6 +24,7 @@ const productUpdate = {
 };
 
 let id;
+let jwt;
 
 describe('Ciclo Test CRUD Productos', () => {
   before(async function () {
@@ -34,7 +40,14 @@ describe('Ciclo Test CRUD Productos', () => {
 
   describe('POST - PRODUCT', () => {
     it('Add 1 product', async () => {
-      const response = await request.post('/').send(productInsert);
+      await getToken();
+      const response = await request
+        .post('/')
+        .set('Authorization', jwt)
+        .field('title', productInsert.title)
+        .field('price', productInsert.price)
+        .attach('thumbnail', 'test/images/shrug.jpg');
+
       expect(response.status).to.eql(200);
 
       const product = response.body;
@@ -105,4 +118,16 @@ async function startServer() {
       reject(error);
     });
   });
+}
+
+async function getToken() {
+  const requestUser = supertest(
+    `http://localhost:${server.address().port}/api/users`
+  );
+
+  const userlogin = await requestUser.post('/login').send(userLogin);
+
+  const user = userlogin.body;
+  console.log(user);
+  jwt = `Bearer ${user.jwt}`;
 }

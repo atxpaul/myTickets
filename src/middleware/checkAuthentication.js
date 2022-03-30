@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import logger from '../config/logger.js';
+
 function checkAuthentication(req, res, next) {
   const authHeader = req.headers.authorization;
 
@@ -9,6 +11,7 @@ function checkAuthentication(req, res, next) {
   }
 
   const token = authHeader.split(' ')[1];
+  logger.info(token);
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
@@ -16,6 +19,7 @@ function checkAuthentication(req, res, next) {
         error: 'not authorized',
       });
     }
+    logger.info(decoded.data);
 
     req.user = decoded.data;
     next();
