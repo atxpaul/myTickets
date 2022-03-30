@@ -10,16 +10,16 @@ let server;
 
 const userSignup = {
   username: 'test@test',
-  password: '$2b$10$qLc7gIRrhZFR2hmdPimeieaL13h5TgGCyIB6NIG/Z1g.BXIsbzVLu',
+  password: '1234',
   name: 'Test',
   surname: 'Test',
   address: 'Street',
-  age: 32,
+  age: 999,
   phone: '666666666',
 };
 
 const userLogin = {
-  username: 'pablo@pablo',
+  username: 'test@test',
   password: '1234',
 };
 
@@ -33,7 +33,7 @@ describe('Ciclo Test Users', () => {
 
   after(function () {
     console.log('Deleting data');
-    deleteUserFromDb();
+    //deleteUserFromDb();
     server.close();
   });
 
@@ -62,6 +62,8 @@ describe('Ciclo Test Users', () => {
 
   describe('USER LOGIN', () => {
     it('Login user and get bearer token', async () => {
+      await new Promise((r) => setTimeout(r, 1000));
+      console.log(jwt);
       const response = await request.post('/login').send(userLogin);
       expect(response.status).to.eql(200);
 
@@ -109,7 +111,6 @@ async function startServer() {
 }
 
 async function deleteUserFromDb() {
-  await new Promise((r) => setTimeout(r, 2000));
   try {
     mongoose.connect(config.mongodb.url, config.mongodb.options);
   } catch (err) {
