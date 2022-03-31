@@ -34,7 +34,6 @@ class ProductController {
     let product;
     const { title, price } = req.body;
     const thumbnail = req.file.filename;
-    logger.info(thumbnail);
     const timestamp = Date.now();
     logger.info({ title, price, thumbnail });
     const newProductId = Math.random().toString(36).slice(2);
@@ -62,7 +61,8 @@ class ProductController {
     if (config.isAdmin) {
       const id = req.params.id;
       console.log(id);
-      const { title, price, thumbnail } = req.body;
+      const { title, price } = req.body;
+      const thumbnail = req.file.filename;
       const timestamp = Date.now();
       const product = new Product(id, title, price, thumbnail, timestamp);
       console.log(product);

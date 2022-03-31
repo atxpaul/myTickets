@@ -13,14 +13,13 @@ const userLogin = {
 const productInsert = {
   title: 'Bolígrafo',
   price: 3.5,
-  thumbnail: 'shrug.jpg',
+  thumbnail: 'pen.jpg',
 };
 
 const productUpdate = {
   title: 'Lápiz',
   price: 1.5,
-  thumbnail:
-    'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-512.png',
+  thumbnail: 'pencil.jpg',
 };
 
 let id;
@@ -46,7 +45,7 @@ describe('Ciclo Test CRUD Productos', () => {
         .set('Authorization', jwt)
         .field('title', productInsert.title)
         .field('price', productInsert.price)
-        .attach('thumbnail', 'test/images/shrug.jpg');
+        .attach('thumbnail', 'test/images/pen.jpg');
 
       expect(response.status).to.eql(200);
 
@@ -79,7 +78,12 @@ describe('Ciclo Test CRUD Productos', () => {
 
   describe('PUT - PRODUCT', () => {
     it('Update a product', async () => {
-      const response = await request.put(`/${id}`).send(productUpdate);
+      const response = await request
+        .put(`/${id}`)
+        .set('Authorization', jwt)
+        .field('title', productUpdate.title)
+        .field('price', productUpdate.price)
+        .attach('thumbnail', 'test/images/pencil.jpg');
       expect(response.status).to.eql(200);
 
       const product = response.body;
@@ -92,7 +96,7 @@ describe('Ciclo Test CRUD Productos', () => {
 
   describe('DELETE - PRODUCT', () => {
     it('Delete a product', async () => {
-      const response = await request.delete(`/${id}`);
+      const response = await request.delete(`/${id}`).set('Authorization', jwt);
       expect(response.status).to.eql(200);
 
       const product = response.body;
