@@ -34,7 +34,9 @@ class ProductRouter {
       checkAdmin,
       this.productController.deleteProductById
     );
-    this.router.get('/images/:image', this.productController.getImageFile);
+
+    this.router.use('/static', this.express.static('uploads'));
+
     return this.router;
   }
 }

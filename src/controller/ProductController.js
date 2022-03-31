@@ -2,8 +2,6 @@ import { productDao } from '../dao/ProductDaoFactory.js';
 import config from '../config/config.js';
 import logger from '../config/logger.js';
 import Product from '../model/Product.js';
-import fs from 'fs';
-import path from 'path';
 
 class ProductController {
   constructor() {}
@@ -106,22 +104,6 @@ class ProductController {
       return res.json({
         error: -1,
         description: 'route delete method deleteProductById not authorized',
-      });
-    }
-  };
-
-  getImageFile = async (req, res) => {
-    const file = req.params.image;
-    const pathFile = './uploads/' + file;
-    logger.info(`Trying to get image ${pathFile}`);
-    let fileExists = fs.existsSync(pathFile);
-    if (fileExists) {
-      logger.info(`Sending image`);
-      return res.sendFile(path.resolve(pathFile));
-    } else {
-      logger.warn(`Image ${pathFile} not found!`);
-      return res.status(404).send({
-        message: 'File does not exists',
       });
     }
   };

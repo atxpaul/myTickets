@@ -22,6 +22,8 @@ app.use(session(config.session));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/static', express.static('uploads'));
+
 app.use('/api/products', productRouter.start());
 app.use('/api/cart', cartRouter.start());
 app.use('/api/users', userRouter.start());
