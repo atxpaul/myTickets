@@ -30,8 +30,27 @@ class Cart {
     }
   }
 
-  addOneProduct(product, arrayOfProducts) {
-    if (product) {
+  addOneProduct(productId, arrayOfProducts) {
+    if (productId) {
+      let obj = arr.find((p) => p._id === productId);
+      if (obj) {
+        obj.quantity += 1;
+      } else {
+        obj = { ...productId, quantity: 1 };
+        arrayOfProducts.push(obj);
+      }
+    }
+  }
+
+  decreaseOneProduct(productId, arrayOfProducts) {
+    if (productId) {
+      let obj = arr.find((p) => p._id === productId);
+      if (obj) {
+        obj.quantity -= 1;
+      } else {
+        obj = { ...productId, quantity: 1 };
+        arrayOfProducts.push(obj);
+      }
     }
   }
 }
