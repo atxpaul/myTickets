@@ -18,7 +18,6 @@ function checkAuthentication(req, res, next) {
         error: 'not authorized',
       });
     }
-    logger.info(`Data decoded ${decoded} for token ${token}`);
 
     req.user = { username: decoded.username, id: decoded.id };
     next();

@@ -34,20 +34,18 @@ class ProductController {
     const thumbnail = req.file.filename;
     const timestamp = Date.now();
     logger.info({ title, price, thumbnail });
-    const newProductId = Math.random().toString(36).slice(2);
-    logger.info(
-      `Creating new product ${
-        (newProductId, title, price, thumbnail, timestamp)
-      }`
-    );
+    logger.info(`Creating new product ${(title, price, thumbnail, timestamp)}`);
     try {
-      product = new Product(newProductId, title, price, thumbnail, timestamp);
+      product = new Product(title, price, thumbnail, timestamp);
     } catch (error) {
       logger.error(error);
     }
-    const id = await productDao.save(JSON.parse(JSON.stringify(product)));
-    if (id) {
-      return res.json(await productDao.getById(id));
+    const newProduct = await productDao.save(
+      JSON.parse(JSON.stringify(product))
+    );
+    if (newProduct) {
+      logger.info(`Product created: ${newProduct}`);
+      return res.json(newProduct);
     } else {
       return res.json({ error: 'Error on saving product' });
     }
@@ -59,17 +57,18 @@ class ProductController {
     if (config.isAdmin) {
       const id = req.params.id;
       console.log(id);
-      const { title, price } = req.body;
+      const title = req.body.title;
+      const price = Number(req.body.price);
       const thumbnail = req.file.filename;
       const timestamp = Date.now();
-      const product = new Product(id, title, price, thumbnail, timestamp);
-      console.log(product);
-      logger.info(`Updating product ${id}`);
+      const product = new Product(title, price, thumbnail, timestamp);
+      logger.info(`Updating product`);
       const updatedProduct = await productDao.updateById(
         id,
         JSON.parse(JSON.stringify(product))
       );
       if (updatedProduct) {
+        logger.info(`Product created: ${updatedProduct}`);
         return res.json(updatedProduct);
       } else {
         return res.json({ error: 'Error on saving product' });

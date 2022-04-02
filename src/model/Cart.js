@@ -1,14 +1,14 @@
 class Cart {
-  #customerUsername;
+  #customerId;
   #products = [];
 
-  constructor(customerUsername) {
-    this.#customerUsername = customerUsername;
+  constructor(customerId) {
+    this.#customerId = customerId;
   }
 
-  setCustomerUsername(customerUsername) {
-    if (customerUsername) {
-      this.customerUsername = customerUsername;
+  setCustomerId(customerId) {
+    if (customerId) {
+      this.customerId = customerId;
     } else {
       throw Error('Missing customer username');
     }
@@ -27,6 +27,11 @@ class Cart {
       this.products.splice(this.products.indexOf(product), 1);
     } else {
       throw Error('Missing product');
+    }
+  }
+
+  addOneProduct(product, arrayOfProducts) {
+    if (product) {
     }
   }
 }

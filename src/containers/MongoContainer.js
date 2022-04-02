@@ -16,13 +16,13 @@ class MongoContainer {
     } catch (err) {
       logger.error(err);
     }
-    return insert.id;
+    return insert;
   }
 
   async updateById(id, newObject) {
     let data;
     try {
-      await this.collection.findOneAndUpdate({ id: id }, newObject);
+      await this.collection.findOneAndUpdate({ _id: id }, newObject);
       data = this.getById(id);
     } catch (err) {
       logger.error(err);
@@ -31,10 +31,12 @@ class MongoContainer {
   }
 
   async getById(id) {
+    logger.info(`Retrieving data for product ${id}`);
     let object;
     try {
-      object = await this.collection.findOne({ id: id });
+      object = await this.collection.findOne({ _id: id });
     } catch (err) {}
+    logger.info(object);
     return object;
   }
 
@@ -47,7 +49,7 @@ class MongoContainer {
   }
 
   async deleteById(id) {
-    await this.collection.findOneAndDelete({ id: id });
+    await this.collection.findOneAndDelete({ _id: id });
   }
 
   async deleteAll() {

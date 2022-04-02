@@ -50,8 +50,8 @@ describe('Ciclo Test CRUD Productos', () => {
       expect(response.status).to.eql(200);
 
       const product = response.body;
-      id = product.id;
-      expect(product).to.include.keys('id', 'title', 'price', 'thumbnail');
+      id = product._id;
+      expect(product).to.include.keys('_id', 'title', 'price', 'thumbnail');
       expect(product.title).to.eql(productInsert.title);
       expect(product.price).to.eql(productInsert.price);
       expect(product.thumbnail).to.eql(productInsert.thumbnail);
