@@ -14,7 +14,7 @@ const userSignup = {
   name: 'Test',
   surname: 'Test',
   address: 'Street',
-  age: 999,
+  age: 99,
   phone: '666666666',
 };
 
