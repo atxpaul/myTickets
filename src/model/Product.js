@@ -5,11 +5,11 @@ class Product {
   #thumbnail;
   #timestamp;
   constructor(id, title, price, thumbnail, timestamp) {
-    this.id = this.setId(id);
-    this.title = this.setTitle(title);
-    this.price = this.setPrice(price);
-    this.thumbnail = this.setThumbnail(thumbnail);
-    this.timestamp = this.setTimestamp(timestamp);
+    this.setId(id);
+    this.setTitle(title);
+    this.setPrice(price);
+    this.setThumbnail(thumbnail);
+    this.setTimestamp(timestamp);
   }
 
   setId(id) {

@@ -84,7 +84,7 @@ describe('Ciclo Test Users', () => {
 
       const home = response.body;
       expect(home).to.include.keys('user');
-      expect(home.user).to.eql(userLogin.username);
+      expect(home.user.username).to.eql(userLogin.username);
     });
     it('User trying to access to protected route without jwt', async () => {
       const response = await request.get('/home').send(userLogin);

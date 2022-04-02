@@ -11,9 +11,9 @@ class UserController {
   postLogin = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    const username = req.body.username;
-    const jwt = generateToken(username);
-    res.status(200).json({ username, jwt });
+    const user = req.user;
+    const jwt = generateToken(user);
+    res.status(200).json({ username: user.username, jwt: jwt });
   };
 
   postSignup = async (req, res) => {
@@ -23,16 +23,15 @@ class UserController {
     const mailer = new Mailer();
     logger.info(`Processing request: ${method}-${originalUrl}`);
     mailer.sendSignupNotification(user);
-    const username = req.body.username;
-    const jwt = generateToken(username);
-    res.status(200).json({ username, jwt });
+    const jwt = generateToken(user);
+    res.status(200).json({ username: user.username, jwt: jwt });
   };
 
   getHome = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
     const user = req.user;
-    logger.info(`Sending user data`);
+    logger.info(`Sending user data ${user}`);
     res.status(200).json({ user });
   };
 

@@ -79,11 +79,6 @@ passport.serializeUser((user, done) => {
   done(null, user._id);
 });
 
-function generateToken(user) {
-  const token = jwt.sign({ data: user }, JWT_SECRET, { expiresIn: '24h' });
-  return token;
-}
-
 function isValidPassword(user, password) {
   return bCrypt.compareSync(password, user.password);
 }
