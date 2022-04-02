@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/server.js",
   "scripts": {
-    "test": "mocha test/*.test.js",
+    "test": "mocha test --timeout 4000 --exit",
     "start": "node ."
   },
   "repository": {
