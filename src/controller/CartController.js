@@ -2,30 +2,63 @@ import { cartDao } from '../dao/CartDaoFactory.js';
 import { productDao } from '../dao/ProductDaoFactory.js';
 import Mailer from '../jobs/Mailer.js';
 import logger from '../config/logger.js';
+import Cart from '../model/Cart.js';
 
 class CartController {
   constructor() {}
 
-  createNewCart = async (req, res) => {
+  addProductsToCart = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    const username = req.user.username;
-    let id;
-    if (username) {
-      id = await cartDao.save({
-        username: username,
-        timestamp: Date.now(),
-        products: [],
-      });
-    } else {
-      logger.warn('Error creating cart because there is not username');
-      return res.json({ error: 'Error on creating cart: Not username' });
-    }
 
-    if (id) {
-      return res.json(id);
+    const customerId = req.user.id;
+    const productId = req.body.productId;
+
+    //1 - get cart 2 - get product 3 - add product to cart
+
+    let query = {};
+    query['customerId'] = customerId;
+    const cartStored = await cartDao.getByCustomQuery(query);
+    const product = await productDao.getById(productId);
+    logger.info(`Attempting to add ${productId} to ${cartStored}`);
+    if (!cartStored && product) {
+      const cart = new Cart(customerId);
+      cart.addOneProduct(productId, cart.products);
+      const newCart = await cartDao.save(JSON.parse(JSON.stringify(cart)));
+      return res.json(newCart);
+    } else if (cartStored && product) {
+      const cart = new Cart(customerId, cartStored.products);
+      console.log('Cart stored');
+      console.log(cartStored.products);
+      cart.addOneProduct(productId, cart.products);
+      const newCart = await cartDao.updateById(
+        cartStored.id,
+        JSON.parse(JSON.stringify(cart))
+      );
+      return res.json(newCart);
     } else {
-      return res.json({ error: 'Error on creating cart' });
+      return res.json({ error: 'No products were added' });
+    }
+  };
+
+  removeProductFromCartById = async (req, res) => {
+    const { originalUrl, method } = req;
+    logger.info(`Processing request: ${method}-${originalUrl}`);
+    const id = req.params.id;
+    const productIdToDelete = req.params.id_product;
+    const cart = await cartDao.getById(id);
+
+    if (cart.products) {
+      let index = cart.products.indexOf(productIdToDelete);
+      if (index > -1) {
+        cart.products.splice(index, 1);
+        const newCart = await cartDao.updateById(id, cart);
+        return res.json(newCart);
+      } else {
+        res.json({ error: 'Product did not exist in cart' });
+      }
+    } else {
+      res.json({ error: 'Cart was already empty' });
     }
   };
 
@@ -66,29 +99,6 @@ class CartController {
     return res.json(cartProductsDetailed);
   };
 
-  addProductsToCart = async (req, res) => {
-    const { originalUrl, method } = req;
-    logger.info(`Processing request: ${method}-${originalUrl}`);
-    const id = req.params.id;
-    const newProductId = req.body.productId;
-    logger.warn(req.body);
-    const cart = await cartDao.getById(id);
-    const product = await productDao.getById(newProductId);
-    logger.info(`Attempting to add ${newProductId} to ${id}`);
-    if (product.id) {
-      if (cart.products) {
-        cart.products.push(newProductId);
-      } else {
-        cart.products = newProductId;
-      }
-
-      const newCart = await cartDao.updateById(id, cart);
-      return res.json(newCart);
-    } else {
-      res.json({ error: 'No products were added' });
-    }
-  };
-
   createNewOrderFromCart = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
@@ -116,27 +126,6 @@ class CartController {
       await cartDao.deleteById(id);
     } catch (err) {
       logger.error(err);
-    }
-  };
-
-  removeProductFromCartById = async (req, res) => {
-    const { originalUrl, method } = req;
-    logger.info(`Processing request: ${method}-${originalUrl}`);
-    const id = req.params.id;
-    const productIdToDelete = req.params.id_product;
-    const cart = await cartDao.getById(id);
-
-    if (cart.products) {
-      let index = cart.products.indexOf(productIdToDelete);
-      if (index > -1) {
-        cart.products.splice(index, 1);
-        const newCart = await cartDao.updateById(id, cart);
-        return res.json(newCart);
-      } else {
-        res.json({ error: 'Product did not exist in cart' });
-      }
-    } else {
-      res.json({ error: 'Cart was already empty' });
     }
   };
 

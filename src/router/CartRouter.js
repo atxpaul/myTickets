@@ -11,11 +11,32 @@ class CartRouter {
 
   start() {
     logger.info(`Starting Carts Router`);
-    this.router.post('/', this.cartController.createNewCart);
-    this.router.delete('/:id', this.cartController.deleteCartById);
-    this.router.get('/:id/products', this.cartController.getProductsByCart);
-    this.router.post('/:id/products', this.cartController.addProductsToCart);
-    this.router.post('/:id/order', this.cartController.createNewOrderFromCart);
+    // this.router.post(
+    //   '/',
+    //   checkAuthentication,
+    //   this.cartController.createNewCart
+    // );
+    this.router.post(
+      '/',
+      checkAuthentication,
+      this.cartController.addProductsToCart
+    );
+    this.router.delete(
+      '/:id',
+      checkAuthentication,
+      this.cartController.deleteCartById
+    );
+    this.router.get(
+      '/:id/products',
+      checkAuthentication,
+      this.cartController.getProductsByCart
+    );
+
+    this.router.post(
+      '/:id/order',
+      checkAuthentication,
+      this.cartController.createNewOrderFromCart
+    );
     this.router.delete(
       '/:id/products/:id_product',
       this.cartController.removeProductFromCartById

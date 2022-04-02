@@ -31,12 +31,12 @@ class MongoContainer {
   }
 
   async getById(id) {
-    logger.info(`Retrieving data for product ${id}`);
     let object;
     try {
       object = await this.collection.findOne({ _id: id });
-    } catch (err) {}
-    logger.info(object);
+    } catch (err) {
+      logger.error(err);
+    }
     return object;
   }
 
@@ -44,7 +44,9 @@ class MongoContainer {
     let objects = [];
     try {
       objects = await this.collection.find({});
-    } catch (err) {}
+    } catch (err) {
+      logger.error(err);
+    }
     return objects;
   }
 
@@ -54,6 +56,19 @@ class MongoContainer {
 
   async deleteAll() {
     await this.collection.remove({});
+  }
+
+  //This method is used to provide custom queries setted on the arguments
+  async getByCustomQuery(query) {
+    let object;
+    logger.info(`The query is: ${query}`);
+    try {
+      object = await this.collection.findOne(query);
+    } catch (err) {
+      logger.error(err);
+    }
+    logger.info(object);
+    return object;
   }
 }
 

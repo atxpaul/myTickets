@@ -25,7 +25,7 @@ app.use(passport.session());
 app.use('/static', express.static('uploads'));
 
 app.use('/api/products', productRouter.start());
-app.use('/api/cart', cartRouter.start());
+app.use('/api/carts', cartRouter.start());
 app.use('/api/users', userRouter.start());
 app.use(express.static('public'));
 

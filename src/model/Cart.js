@@ -2,8 +2,9 @@ class Cart {
   #customerId;
   #products = [];
 
-  constructor(customerId) {
-    this.#customerId = customerId;
+  constructor(customerId, products = []) {
+    this.setCustomerId(customerId);
+    this.setProducts(products);
   }
 
   setCustomerId(customerId) {
@@ -14,11 +15,11 @@ class Cart {
     }
   }
 
-  addProduct(product) {
-    if (product) {
-      this.products.push(product);
+  setProducts(products) {
+    if (products) {
+      this.products = products;
     } else {
-      throw Error('Missing product');
+      throw Error('Missing products');
     }
   }
 
@@ -32,11 +33,14 @@ class Cart {
 
   addOneProduct(productId, arrayOfProducts) {
     if (productId) {
-      let obj = arr.find((p) => p._id === productId);
+      let obj = arrayOfProducts.find((p) => p.productId === productId);
+      console.log('Hola');
+      console.log(arrayOfProducts);
       if (obj) {
         obj.quantity += 1;
+        console.log(`Obj +1: ${obj}`);
       } else {
-        obj = { ...productId, quantity: 1 };
+        obj = { productId, quantity: 1 };
         arrayOfProducts.push(obj);
       }
     }
@@ -44,7 +48,7 @@ class Cart {
 
   decreaseOneProduct(productId, arrayOfProducts) {
     if (productId) {
-      let obj = arr.find((p) => p._id === productId);
+      let obj = arrayOfProducts.find((p) => p._id === productId);
       if (obj) {
         obj.quantity -= 1;
       } else {
@@ -54,3 +58,5 @@ class Cart {
     }
   }
 }
+
+export default Cart;
