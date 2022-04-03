@@ -1,8 +1,11 @@
 import express from 'express';
+import { engine } from 'express-handlebars';
 import ProductRouter from '../router/ProductRouter.js';
 import CartRouter from '../router/CartRouter.js';
 import UserRouter from '../router/UserRouter.js';
 import OrderRouter from '../router/OrderRouter.js';
+
+import getInfo from '../utils/getInfo.js';
 
 import session from 'express-session';
 import passport from '../middleware/passport.js';
@@ -16,6 +19,23 @@ const productRouter = new ProductRouter(express);
 const cartRouter = new CartRouter(express);
 const userRouter = new UserRouter(express);
 const orderRouter = new OrderRouter(express);
+
+const info = getInfo();
+
+app.engine(
+  'hbs',
+  engine({
+    extname: '.hbs',
+    defaultLayout: 'index.hbs',
+    layoutsDir: process.cwd() + '/views/layouts',
+    partialsDir: process.cwd() + '/views/partials/',
+  })
+);
+app.set('view engine', 'hbs');
+app.set('views', './views');
+app.get('/info', (req, res) => {
+  res.render('info.hbs', { info: info });
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
