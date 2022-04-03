@@ -1,8 +1,8 @@
 import { cartDao } from '../dao/CartDaoFactory.js';
 import { productDao } from '../dao/ProductDaoFactory.js';
-import Mailer from '../jobs/Mailer.js';
 import logger from '../config/logger.js';
 import Cart from '../model/Cart.js';
+import OrderService from '../service/OrderService.js';
 
 class CartController {
   constructor() {}
@@ -96,28 +96,21 @@ class CartController {
   createNewOrderFromCart = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    const id = req.params.id;
-    const user = req.user;
-    let soldProduct;
-    if (!user) {
-      res.json({ error: 'No user is logged' });
-    }
-    const cart = await cartDao.getById(id);
-    let listOfProductsForNewOrder = [];
-    for (let product of cart.products) {
-      soldProduct = await productDao.getById(product);
+    const customerId = req.user.id;
+    const username = req.user.username;
+    let query = {};
+    query['customerId'] = customerId;
+    const cartStored = await cartDao.getByCustomQuery(query);
+    const orderService = new OrderService();
+    const order = await orderService.createNewOrder(
+      cartStored.customerId,
+      cartStored.products,
+      username
+    );
 
-      let productTransformed = {
-        title: soldProduct.title,
-        price: soldProduct.price,
-      };
-      listOfProductsForNewOrder.push(productTransformed);
-    }
-    const mailer = new Mailer();
-    mailer.sendNewOrderNotification(user, listOfProductsForNewOrder);
-    res.json({ success: 'New order created for user' });
+    res.json({ success: 'New order created for user', order });
     try {
-      await cartDao.deleteById(id);
+      await cartDao.deleteById(cartStored.id);
     } catch (err) {
       logger.error(err);
     }

@@ -2,6 +2,7 @@ import express from 'express';
 import ProductRouter from '../router/ProductRouter.js';
 import CartRouter from '../router/CartRouter.js';
 import UserRouter from '../router/UserRouter.js';
+import OrderRouter from '../router/OrderRouter.js';
 
 import session from 'express-session';
 import passport from '../middleware/passport.js';
@@ -14,6 +15,7 @@ const app = express();
 const productRouter = new ProductRouter(express);
 const cartRouter = new CartRouter(express);
 const userRouter = new UserRouter(express);
+const orderRouter = new OrderRouter(express);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,6 +29,7 @@ app.use('/static', express.static('uploads'));
 app.use('/api/products', productRouter.start());
 app.use('/api/carts', cartRouter.start());
 app.use('/api/users', userRouter.start());
+app.use('/api/orders', orderRouter.start());
 app.use(express.static('public'));
 
 app.use((req, res) => {

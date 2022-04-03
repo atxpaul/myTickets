@@ -58,12 +58,24 @@ class MongoContainer {
     await this.collection.remove({});
   }
 
-  //This method is used to provide custom queries setted on the arguments
+  //This methods are used to provide custom queries setted on the arguments
   async getByCustomQuery(query) {
     let object;
     logger.info(`The query is: ${query}`);
     try {
       object = await this.collection.findOne(query);
+    } catch (err) {
+      logger.error(err);
+    }
+    logger.info(object);
+    return object;
+  }
+
+  async getAllByCustomQuery(query) {
+    let object;
+    logger.info(`The query is: ${query}`);
+    try {
+      object = await this.collection.find(query);
     } catch (err) {
       logger.error(err);
     }

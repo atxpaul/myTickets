@@ -29,7 +29,7 @@ class CartRouter {
     this.router.get('/', checkAuthentication, this.cartController.getCart);
 
     this.router.post(
-      '/:id/order',
+      '/order',
       checkAuthentication,
       this.cartController.createNewOrderFromCart
     );
