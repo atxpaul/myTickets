@@ -7,7 +7,7 @@ import Cart from '../model/Cart.js';
 class CartController {
   constructor() {}
 
-  addProductsToCart = async (req, res) => {
+  addOneProductUnitToCart = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
 
@@ -28,8 +28,6 @@ class CartController {
       return res.json(newCart);
     } else if (cartStored && product) {
       const cart = new Cart(customerId, cartStored.products);
-      console.log('Cart stored');
-      console.log(cartStored.products);
       cart.addOneProduct(productId, cart.products);
       const newCart = await cartDao.updateById(
         cartStored.id,
@@ -41,62 +39,58 @@ class CartController {
     }
   };
 
-  removeProductFromCartById = async (req, res) => {
+  removeOneProductUnitFromCart = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    const id = req.params.id;
-    const productIdToDelete = req.params.id_product;
-    const cart = await cartDao.getById(id);
+    const customerId = req.user.id;
+    const productId = req.body.productId;
 
-    if (cart.products) {
-      let index = cart.products.indexOf(productIdToDelete);
-      if (index > -1) {
-        cart.products.splice(index, 1);
-        const newCart = await cartDao.updateById(id, cart);
-        return res.json(newCart);
-      } else {
-        res.json({ error: 'Product did not exist in cart' });
-      }
-    } else {
-      res.json({ error: 'Cart was already empty' });
-    }
+    //1 - get cart 2 - get product 3 - remove product from cart
+    let query = {};
+    query['customerId'] = customerId;
+    const cartStored = await cartDao.getByCustomQuery(query);
+    const cart = new Cart(customerId, cartStored.products);
+    cart.decreaseOneProduct(productId, cart.products);
+    const newCart = await cartDao.updateById(
+      cartStored.id,
+      JSON.parse(JSON.stringify(cart))
+    );
+    return res.json(newCart);
   };
 
-  deleteCartById = async (req, res) => {
+  removeProductsFromCart = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    const id = req.params.id;
-    const cartToDelete = await cartDao.getById(id);
-    if (cartToDelete) {
-      await cartDao.deleteById(id);
-      return res.json(cartToDelete);
-    } else {
-      return res.json({ error: 'Cart to delete does not exists' });
-    }
+    const customerId = req.user.id;
+    const productId = req.params.id_product;
+
+    //1 - get cart 2 - get product 3 - remove product from cart
+    let query = {};
+    query['customerId'] = customerId;
+    const cartStored = await cartDao.getByCustomQuery(query);
+    const cart = new Cart(customerId, cartStored.products);
+    logger.info(productId);
+    cart.removeProduct(productId);
+    const newCart = await cartDao.updateById(
+      cartStored.id,
+      JSON.parse(JSON.stringify(cart))
+    );
+    return res.json(newCart);
   };
 
-  getProductsByCart = async (req, res) => {
+  getCart = async (req, res) => {
     const { originalUrl, method } = req;
     logger.info(`Processing request: ${method}-${originalUrl}`);
-    let cartProductsId;
-    const id = req.params.id;
+    const customerId = req.user.id;
 
-    const cartContent = await cartDao.getById(id);
-    if (cartContent) {
-      cartProductsId = cartContent.products;
+    let query = {};
+    query['customerId'] = customerId;
+    const cartStored = await cartDao.getByCustomQuery(query);
+    if (cartStored) {
+      return res.json(cartStored);
     } else {
-      return res.json({
-        error: 'Cart does not exists or does not have products',
-      });
+      return res.json({});
     }
-
-    const cartProductsDetailed = [];
-    for (let i = 0; i < cartProductsId.length; i++) {
-      const product = await productDao.getById(cartProductsId[i]);
-      cartProductsDetailed.push(product);
-    }
-
-    return res.json(cartProductsDetailed);
   };
 
   createNewOrderFromCart = async (req, res) => {
@@ -127,25 +121,6 @@ class CartController {
     } catch (err) {
       logger.error(err);
     }
-  };
-
-  //TD -> We need to improve this function for filtering by user instead use getAll
-  //We assume that there will be only 1 cart per user. Cart will be deleted after creating order.
-  getCartsByUser = async (req, res) => {
-    const { originalUrl, method } = req;
-    logger.info(`Processing request: ${method}-${originalUrl}`);
-    const username = req.user.username;
-    logger.info(`Recovering cart for user ${username}`);
-
-    const carts = await cartDao.getAll();
-    let id;
-    for (let cart of carts) {
-      if (cart.username == username) {
-        id = cart.id;
-      }
-    }
-    logger.info(`Recovering cart ${id}`);
-    res.json(id);
   };
 }
 

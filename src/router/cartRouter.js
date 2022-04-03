@@ -11,40 +11,27 @@ class CartRouter {
 
   start() {
     logger.info(`Starting Carts Router`);
-    // this.router.post(
-    //   '/',
-    //   checkAuthentication,
-    //   this.cartController.createNewCart
-    // );
-    this.router.post(
-      '/',
+    this.router.put(
+      '/add',
       checkAuthentication,
-      this.cartController.addProductsToCart
+      this.cartController.addOneProductUnitToCart
+    );
+    this.router.put(
+      '/decrease',
+      checkAuthentication,
+      this.cartController.removeOneProductUnitFromCart
     );
     this.router.delete(
-      '/:id',
+      '/products/:id_product',
       checkAuthentication,
-      this.cartController.deleteCartById
+      this.cartController.removeProductsFromCart
     );
-    this.router.get(
-      '/:id/products',
-      checkAuthentication,
-      this.cartController.getProductsByCart
-    );
+    this.router.get('/', checkAuthentication, this.cartController.getCart);
 
     this.router.post(
       '/:id/order',
       checkAuthentication,
       this.cartController.createNewOrderFromCart
-    );
-    this.router.delete(
-      '/:id/products/:id_product',
-      this.cartController.removeProductFromCartById
-    );
-    this.router.get(
-      '/',
-      checkAuthentication,
-      this.cartController.getCartsByUser
     );
     return this.router;
   }

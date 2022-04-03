@@ -23,9 +23,12 @@ class Cart {
     }
   }
 
-  removeProduct(product) {
-    if (product) {
-      this.products.splice(this.products.indexOf(product), 1);
+  removeProduct(productId) {
+    if (productId) {
+      let obj = this.products.find((p) => p.productId === productId);
+      if (this.products.indexOf(obj) > -1) {
+        this.products.splice(this.products.indexOf(obj), 1);
+      }
     } else {
       throw Error('Missing product');
     }
@@ -34,11 +37,8 @@ class Cart {
   addOneProduct(productId, arrayOfProducts) {
     if (productId) {
       let obj = arrayOfProducts.find((p) => p.productId === productId);
-      console.log('Hola');
-      console.log(arrayOfProducts);
       if (obj) {
         obj.quantity += 1;
-        console.log(`Obj +1: ${obj}`);
       } else {
         obj = { productId, quantity: 1 };
         arrayOfProducts.push(obj);
@@ -48,12 +48,12 @@ class Cart {
 
   decreaseOneProduct(productId, arrayOfProducts) {
     if (productId) {
-      let obj = arrayOfProducts.find((p) => p._id === productId);
+      let obj = arrayOfProducts.find((p) => p.productId === productId);
       if (obj) {
         obj.quantity -= 1;
-      } else {
-        obj = { ...productId, quantity: 1 };
-        arrayOfProducts.push(obj);
+        if (obj.quantity === 0) {
+          this.removeProduct(obj.productId);
+        }
       }
     }
   }

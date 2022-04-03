@@ -25,7 +25,7 @@ const productUpdate = {
 let id;
 let jwt;
 
-describe('Ciclo Test CRUD Productos', () => {
+describe('Products test cycle', () => {
   before(async function () {
     server = await startServer();
     request = supertest(
