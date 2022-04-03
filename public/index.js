@@ -11,9 +11,8 @@ function render(data) {
   const html = data
     .map((elem, index) => {
       return `<div>
-        <img class="img-fluid img-thumbnail" src="${elem.author.avatar}" style="width: 50px;">
-        <strong>${elem.author.alias}</strong> [${elem.date}]
-        <em>${elem.text}</em></div>`;
+        <strong>${elem.username}</strong> [${elem.timestamp}]
+        <em>${elem.message}</em></div>`;
     })
     .join(' ');
   document.getElementById('messages').innerHTML = html;
