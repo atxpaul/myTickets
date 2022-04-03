@@ -51,11 +51,15 @@ class MongoContainer {
   }
 
   async deleteById(id) {
-    await this.collection.findOneAndDelete({ _id: id });
+    try {
+      await this.collection.findOneAndDelete({ _id: id });
+    } catch (err) {
+      logger.error(err);
+    }
   }
 
   async deleteAll() {
-    await this.collection.remove({});
+    await this.collection.deleteMany({});
   }
 
   //This methods are used to provide custom queries setted on the arguments
