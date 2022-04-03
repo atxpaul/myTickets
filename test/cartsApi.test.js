@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
-import app from '../src/loader/app.js';
+import { app } from '../src/loader/app.js';
 import config from '../src/config/config.js';
 import mongoose from 'mongoose';
 import { productDao } from '../src/dao/ProductDaoFactory.js';

@@ -1,10 +1,9 @@
 import parseArgs from 'minimist';
 import os from 'os';
 
-import app from './loader/app.js';
+import { httpServer } from './loader/app.js';
+import Mongo from './loader/Mongo.js';
 
-import mongoose from 'mongoose';
-import config from './config/config.js';
 import logger from './config/logger.js';
 
 // const options = {
@@ -25,24 +24,23 @@ import logger from './config/logger.js';
 async function connectServer() {
   const PORT = process.env.PORT || 8080;
 
-  const server = app.listen(PORT, () => {
-    try {
-      mongoose.connect(config.mongodb.url, config.mongodb.options);
-    } catch (err) {
-      logger.error(err);
-    }
+  const connectedServer = httpServer.listen(PORT, async () => {
+    const mongo = new Mongo();
+    await mongo.connectDb();
 
     logger.info(
       `
       ###################################################
       🛡️  Server on PID ${process.pid} listening on port: ${
-        server.address().port
+        connectedServer.address().port
       } 🛡️ 
       ###################################################
     `
     );
   });
-  server.on('error', (error) => logger.error(`Error on server ${error}`));
+  connectedServer.on('error', (error) =>
+    logger.error(`Error on server ${error}`)
+  );
 }
 
 connectServer();

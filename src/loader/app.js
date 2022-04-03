@@ -1,15 +1,15 @@
 import express from 'express';
 import { engine } from 'express-handlebars';
+import { Server as HttpServer } from 'http';
+import { Server as Socket } from 'socket.io';
 import ProductRouter from '../router/ProductRouter.js';
 import CartRouter from '../router/CartRouter.js';
 import UserRouter from '../router/UserRouter.js';
 import OrderRouter from '../router/OrderRouter.js';
-
+import MessageSocketRouter from '../router/MessageSocketRouter.js';
 import getInfo from '../utils/getInfo.js';
-
 import session from 'express-session';
 import passport from '../middleware/passport.js';
-
 import config from '../config/config.js';
 import logger from '../config/logger.js';
 
@@ -63,4 +63,12 @@ app.use((req, res) => {
   });
 });
 
-export default app;
+const httpServer = new HttpServer(app);
+
+const io = new Socket(httpServer);
+
+const messageSocketRouter = new MessageSocketRouter(io);
+
+messageSocketRouter.startRouter();
+
+export { httpServer, app };

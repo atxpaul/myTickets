@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
-import app from '../src/loader/app.js';
+import { app } from '../src/loader/app.js';
 
 let request;
 let server;
