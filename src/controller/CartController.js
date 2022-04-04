@@ -103,18 +103,22 @@ class CartController {
         let query = {};
         query['customerId'] = customerId;
         const cartStored = await cartDao.getByCustomQuery(query);
-        const orderService = new OrderService();
-        const order = await orderService.createNewOrder(
-            cartStored.customerId,
-            cartStored.products,
-            username
-        );
+        if (cartStored && cartStored.products.length > 0) {
+            const orderService = new OrderService();
+            const order = await orderService.createNewOrder(
+                cartStored.customerId,
+                cartStored.products,
+                username
+            );
 
-        res.json({ success: 'New order created for user', order });
-        try {
-            await cartDao.deleteById(cartStored.id);
-        } catch (err) {
-            logger.error(err);
+            res.json({ success: 'New order created for user', order });
+            try {
+                await cartDao.deleteById(cartStored.id);
+            } catch (err) {
+                logger.error(err);
+            }
+        } else {
+            res.json({ error: 'No items in cart to purchase' });
         }
     };
 }

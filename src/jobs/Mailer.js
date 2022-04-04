@@ -25,23 +25,91 @@ class Mailer {
         this.sendEmail(mailOptions);
     }
 
-    async sendNewOrderNotification(user, products) {
-        let htmlForProductList = `<ul>`;
+    async sendNewOrderNotification(username, products) {
+        let total = 0;
+        let htmlForProductList = '';
         for (let product of products) {
             htmlForProductList = htmlForProductList.concat(
-                `<li>${product.title} - ${product.price}</li>`
+                `<td>${product.title}</td>
+                <td>${product.price}</td>
+                <td>${product.quantity}</td>`
             );
+            total = total + product.price * product.quantity;
         }
-        htmlForProductList = htmlForProductList.concat(`</ul>`);
-        const mailOptions = {
+        const mailOptionsToAdmin = {
             from: 'myTickets',
             to: config.adminMail,
-            subject: `New order by ${user.name} - ${user.username}`,
-            html: `<h1>New Order Notification</h1>
+            subject: `New order by ${username}`,
+            html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+            <style>
+            table, th, td {
+            border: 1px solid;
+            }
+            </style>
+            </head>
+            <body>
+            <h1>New Order Notification</h1>
+            <table>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Units</th>
+            </tr>
+            <tr>
 
-${htmlForProductList}`,
+            ${htmlForProductList}
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>${total.toFixed(2)}$</td>
+              </tr>
+              </table>`,
         };
-        this.sendEmail(mailOptions);
+        this.sendEmail(mailOptionsToAdmin);
+
+        const mailOptionsToCustomer = {
+            from: 'myTickets',
+            to: username,
+            subject: `Your order is on the way, ${username}`,
+            html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+            <style>
+            table, th, td {
+              border: 1px solid;
+            }
+            </style>
+            </head>
+            <body>
+            
+            <h1>Thanks for your purchase!</h1>
+
+            <p>Your order is on the way, ${username}, in a few days you will recive more updates, stay alert!</p>
+            <table>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Units</th>
+            </tr>
+            <tr>
+
+            ${htmlForProductList}
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>${total.toFixed(2)}$</td>
+              </tr>
+              </table>`,
+        };
+        this.sendEmail(mailOptionsToCustomer);
     }
 
     async sendEmail(mailOptions) {
