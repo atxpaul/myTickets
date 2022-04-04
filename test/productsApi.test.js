@@ -1,13 +1,28 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
 import { app } from '../src/loader/app.js';
+import config from '../src/config/config.js';
+import mongoose from 'mongoose';
+import User from '../src/model/User.js';
 
 let request;
 let server;
 
+config.adminMail = 'admin@admin';
+
 const userLogin = {
     username: 'admin@admin',
     password: '1234',
+};
+
+const userSignup = {
+    username: 'admin@admin',
+    password: '1234',
+    name: 'Test',
+    surname: 'Test',
+    address: 'Street',
+    age: 99,
+    phone: '666666666',
 };
 
 const productInsert = {
@@ -31,10 +46,12 @@ describe('Products test cycle', () => {
         request = supertest(
             `http://localhost:${server.address().port}/api/products`
         );
+        jwt = await createUser(userSignup);
     });
 
     after(function () {
         server.close();
+        deleteUserFromDb();
     });
 
     describe('POST - PRODUCT', () => {
@@ -133,6 +150,28 @@ async function startServer() {
     });
 }
 
+async function createUser(user) {
+    console.log('Creating user');
+    const requestUser = supertest(
+        `http://localhost:${server.address().port}/api/users`
+    );
+    const newUser = await requestUser
+        .post('/signup')
+        .field('username', user.username)
+        .field('password', user.password)
+        .field('name', user.name)
+        .field('surname', user.surname)
+        .field('address', user.address)
+        .field('age', user.age)
+        .field('phone', user.phone)
+        .attach('avatar', 'test/images/shrug.jpg');
+
+    const signup = newUser.body;
+    const jwt = `Bearer ${signup.jwt}`;
+    console.log(jwt);
+    return jwt;
+}
+
 async function getToken() {
     const requestUser = supertest(
         `http://localhost:${server.address().port}/api/users`
@@ -143,4 +182,14 @@ async function getToken() {
     const user = userlogin.body;
     console.log(user);
     jwt = `Bearer ${user.jwt}`;
+}
+
+async function deleteUserFromDb() {
+    try {
+        mongoose.connect(config.mongodb.url, config.mongodb.options);
+    } catch (err) {
+        logger.error(err);
+    }
+
+    await User.deleteOne({ username: userSignup.username });
 }
