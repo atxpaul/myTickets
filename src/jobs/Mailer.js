@@ -30,9 +30,9 @@ class Mailer {
         let htmlForProductList = '';
         for (let product of products) {
             htmlForProductList = htmlForProductList.concat(
-                `<td>${product.title}</td>
+                `<tr><td>${product.title}</td>
                 <td>${product.price}</td>
-                <td>${product.quantity}</td>`
+                <td>${product.quantity}</td></tr>`
             );
             total = total + product.price * product.quantity;
         }
