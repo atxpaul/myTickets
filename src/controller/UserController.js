@@ -18,11 +18,13 @@ class UserController {
 
     postSignup = async (req, res) => {
         const { originalUrl, method } = req;
+        logger.info(`Processing request: ${method}-${originalUrl}`);
         const user = req.user;
         logger.info(user);
-        const mailer = new Mailer();
-        logger.info(`Processing request: ${method}-${originalUrl}`);
-        mailer.sendSignupNotification(user);
+        if (process.env.NODE_ENV === 'production') {
+            const mailer = new Mailer();
+            mailer.sendSignupNotification(user);
+        }
         const jwt = generateToken(user);
         res.status(200).json({ username: user.username, jwt: jwt });
     };

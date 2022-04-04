@@ -26,9 +26,13 @@ class OrderService {
             };
             listOfProductsForNewOrder.push(productTransformed);
         }
-        const mailer = new Mailer();
-        mailer.sendNewOrderNotification(username, listOfProductsForNewOrder);
-
+        if (process.env.NODE_ENV === 'production') {
+            const mailer = new Mailer();
+            mailer.sendNewOrderNotification(
+                username,
+                listOfProductsForNewOrder
+            );
+        }
         return newOrder;
     };
 }

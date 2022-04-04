@@ -27,7 +27,11 @@ async function connectServer() {
     const connectedServer = httpServer.listen(PORT, async () => {
         const mongo = new Mongo();
         await mongo.connectDb();
-
+        if (process.env.NODE_ENV === 'production') {
+            logger.info(
+                `Server is running on environment ${process.env.NODE_ENV}`
+            );
+        }
         logger.info(
             `
       ###################################################

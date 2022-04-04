@@ -56,57 +56,43 @@ class ProductController {
     updateProductById = async (req, res) => {
         const { originalUrl, method } = req;
         logger.info(`Processing request: ${method}-${originalUrl}`);
-        if (config.isAdmin) {
-            const id = req.params.id;
-            const title = req.body.title;
-            const price = Number(req.body.price);
-            const thumbnail = req.file.filename;
-            const timestamp = Date.now();
-            const product = new Product(title, price, thumbnail, timestamp);
-            logger.info(`Updating product`);
-            const updatedProduct = await productDao.updateById(
-                id,
-                JSON.parse(JSON.stringify(product))
-            );
-            if (updatedProduct) {
-                logger.info(`Product created: ${updatedProduct}`);
-                return res.json(updatedProduct);
-            } else {
-                return res.json({ error: 'Error on saving product' });
-            }
+
+        const id = req.params.id;
+        const title = req.body.title;
+        const price = Number(req.body.price);
+        const thumbnail = req.file.filename;
+        const timestamp = Date.now();
+        const product = new Product(title, price, thumbnail, timestamp);
+        logger.info(`Updating product`);
+        const updatedProduct = await productDao.updateById(
+            id,
+            JSON.parse(JSON.stringify(product))
+        );
+        if (updatedProduct) {
+            logger.info(`Product created: ${updatedProduct}`);
+            return res.json(updatedProduct);
         } else {
-            return res.json({
-                error: -1,
-                description:
-                    'route put method updateProductById not authorized',
-            });
+            return res.json({ error: 'Error on saving product' });
         }
     };
 
     deleteProductById = async (req, res) => {
         const { originalUrl, method } = req;
         logger.info(`Processing request: ${method}-${originalUrl}`);
-        if (config.isAdmin) {
-            const id = req.params.id;
-            logger.info(`Trying to delete product ${id}`);
-            const productToDelete = await productDao.getById(id);
-            if (productToDelete) {
-                try {
-                    await productDao.deleteById(id);
-                } catch (err) {
-                    logger.error(err);
-                }
 
-                return res.json(productToDelete);
-            } else {
-                return res.json({ error: 'Product to delete does not exists' });
+        const id = req.params.id;
+        logger.info(`Trying to delete product ${id}`);
+        const productToDelete = await productDao.getById(id);
+        if (productToDelete) {
+            try {
+                await productDao.deleteById(id);
+            } catch (err) {
+                logger.error(err);
             }
+
+            return res.json(productToDelete);
         } else {
-            return res.json({
-                error: -1,
-                description:
-                    'route delete method deleteProductById not authorized',
-            });
+            return res.json({ error: 'Product to delete does not exists' });
         }
     };
 }
