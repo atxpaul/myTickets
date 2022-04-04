@@ -5,87 +5,87 @@ import logger from '../config/logger.js';
 await mongoose.connect(config.mongodb.url, config.mongodb.options);
 
 class MongoContainer {
-  constructor(collectionName, schemaName) {
-    this.collection = mongoose.model(collectionName, schemaName);
-  }
-
-  async save(object) {
-    let insert;
-    try {
-      insert = await this.collection.create(object);
-    } catch (err) {
-      logger.error(err);
+    constructor(collectionName, schemaName) {
+        this.collection = mongoose.model(collectionName, schemaName);
     }
-    return insert;
-  }
 
-  async updateById(id, newObject) {
-    let data;
-    try {
-      await this.collection.findOneAndUpdate({ _id: id }, newObject);
-      data = this.getById(id);
-    } catch (err) {
-      logger.error(err);
+    async save(object) {
+        let insert;
+        try {
+            insert = await this.collection.create(object);
+        } catch (err) {
+            logger.error(err);
+        }
+        return insert;
     }
-    return data;
-  }
 
-  async getById(id) {
-    let object;
-    try {
-      object = await this.collection.findOne({ _id: id });
-    } catch (err) {
-      logger.error(err);
+    async updateById(id, newObject) {
+        let data;
+        try {
+            await this.collection.findOneAndUpdate({ _id: id }, newObject);
+            data = this.getById(id);
+        } catch (err) {
+            logger.error(err);
+        }
+        return data;
     }
-    return object;
-  }
 
-  async getAll() {
-    let objects = [];
-    try {
-      objects = await this.collection.find({});
-    } catch (err) {
-      logger.error(err);
+    async getById(id) {
+        let object;
+        try {
+            object = await this.collection.findOne({ _id: id });
+        } catch (err) {
+            logger.error(err);
+        }
+        return object;
     }
-    return objects;
-  }
 
-  async deleteById(id) {
-    try {
-      await this.collection.findOneAndDelete({ _id: id });
-    } catch (err) {
-      logger.error(err);
+    async getAll() {
+        let objects = [];
+        try {
+            objects = await this.collection.find({});
+        } catch (err) {
+            logger.error(err);
+        }
+        return objects;
     }
-  }
 
-  async deleteAll() {
-    await this.collection.deleteMany({});
-  }
-
-  //This methods are used to provide custom queries setted on the arguments
-  async getByCustomQuery(query) {
-    let object;
-    logger.info(`The query is: ${query}`);
-    try {
-      object = await this.collection.findOne(query);
-    } catch (err) {
-      logger.error(err);
+    async deleteById(id) {
+        try {
+            await this.collection.findOneAndDelete({ _id: id });
+        } catch (err) {
+            logger.error(err);
+        }
     }
-    logger.info(object);
-    return object;
-  }
 
-  async getAllByCustomQuery(query) {
-    let object;
-    logger.info(`The query is: ${query}`);
-    try {
-      object = await this.collection.find(query);
-    } catch (err) {
-      logger.error(err);
+    async deleteAll() {
+        await this.collection.deleteMany({});
     }
-    logger.info(object);
-    return object;
-  }
+
+    //This methods are used to provide custom queries setted on the arguments
+    async getByCustomQuery(query) {
+        let object;
+        logger.info(`The query is: ${query}`);
+        try {
+            object = await this.collection.findOne(query);
+        } catch (err) {
+            logger.error(err);
+        }
+        logger.info(object);
+        return object;
+    }
+
+    async getAllByCustomQuery(query) {
+        let object;
+        logger.info(`The query is: ${query}`);
+        try {
+            object = await this.collection.find(query);
+        } catch (err) {
+            logger.error(err);
+        }
+        logger.info(object);
+        return object;
+    }
 }
 
 export default MongoContainer;

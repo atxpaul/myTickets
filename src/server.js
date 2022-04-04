@@ -22,25 +22,25 @@ import logger from './config/logger.js';
 // const { mode, cpu, _ } = parseArgs(commandLineArgs, options);
 
 async function connectServer() {
-  const PORT = process.env.PORT || 8080;
+    const PORT = process.env.PORT || 8080;
 
-  const connectedServer = httpServer.listen(PORT, async () => {
-    const mongo = new Mongo();
-    await mongo.connectDb();
+    const connectedServer = httpServer.listen(PORT, async () => {
+        const mongo = new Mongo();
+        await mongo.connectDb();
 
-    logger.info(
-      `
+        logger.info(
+            `
       ###################################################
       🛡️  Server on PID ${process.pid} listening on port: ${
-        connectedServer.address().port
-      } 🛡️ 
+                connectedServer.address().port
+            } 🛡️ 
       ###################################################
     `
+        );
+    });
+    connectedServer.on('error', (error) =>
+        logger.error(`Error on server ${error}`)
     );
-  });
-  connectedServer.on('error', (error) =>
-    logger.error(`Error on server ${error}`)
-  );
 }
 
 connectServer();

@@ -15,15 +15,3 @@ Starting with npm script
 ```sh
 npm start
 ```
-
-Starting as cluster
-
-```sh
-node src/server.js -m=cluster
-```
-
-You can specify the number of cores with -c, example:
-
-```sh
-node src/server.js -m=cluster -c=3
-```

@@ -31,8 +31,7 @@ describe('Sockets test cycle', () => {
                 client.disconnect();
                 done();
             });
-            //Only with this await I'm able to connect to server.
-            //await new Promise((r) => setTimeout(r, 1000));
+            await new Promise((r) => setTimeout(r, 1000));
 
             client.on('connect', () => {
                 client.emit('new-message', message);

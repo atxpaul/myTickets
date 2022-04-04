@@ -23,18 +23,18 @@ const orderRouter = new OrderRouter(express);
 const info = getInfo();
 
 app.engine(
-  'hbs',
-  engine({
-    extname: '.hbs',
-    defaultLayout: 'index.hbs',
-    layoutsDir: process.cwd() + '/views/layouts',
-    partialsDir: process.cwd() + '/views/partials/',
-  })
+    'hbs',
+    engine({
+        extname: '.hbs',
+        defaultLayout: 'index.hbs',
+        layoutsDir: process.cwd() + '/views/layouts',
+        partialsDir: process.cwd() + '/views/partials/',
+    })
 );
 app.set('view engine', 'hbs');
 app.set('views', './views');
 app.get('/info', (req, res) => {
-  res.render('info.hbs', { info: info });
+    res.render('info.hbs', { info: info });
 });
 
 app.use(express.json());
@@ -50,17 +50,16 @@ app.use('/api/products', productRouter.start());
 app.use('/api/carts', cartRouter.start());
 app.use('/api/users', userRouter.start());
 app.use('/api/orders', orderRouter.start());
-app.use(express.static('public'));
 
 app.use((req, res) => {
-  const { url, method } = req;
-  if (url != '/favicon.ico') {
-    logger.warn(`Route ${method}-${url} not implemented`);
-  }
-  res.json({
-    error: -2,
-    description: `Route ${req.url} not implemented`,
-  });
+    const { url, method } = req;
+    if (url != '/favicon.ico') {
+        logger.warn(`Route ${method}-${url} not implemented`);
+    }
+    res.json({
+        error: -2,
+        description: `Route ${req.url} not implemented`,
+    });
 });
 
 const httpServer = new HttpServer(app);
