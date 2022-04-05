@@ -1,0 +1,19 @@
+paths:
+    /api/users/login:
+        post:
+            summary: Login a existing user
+            tags:
+                - Users
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/requestBodies/NewLogin'
+            responses:
+                '201':
+                    description: The user logged.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'

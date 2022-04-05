@@ -1,0 +1,23 @@
+paths:
+    /api/carts/add:
+        put:
+            summary: Add a product to a cart and if cart doesn't exists before, it's created
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+            tags:
+                - Carts
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/requestBodies/NewCart'
+            responses:
+                '201':
+                    description: The updated cart.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Cart'

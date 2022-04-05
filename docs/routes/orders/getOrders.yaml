@@ -1,0 +1,20 @@
+paths:
+    /api/orders:
+        get:
+            summary: Get all Order or a specific from the user in the header jwt
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+                - in: path
+                  name: Order _id
+                  type: string
+            tags:
+                - Orders
+            responses:
+                '201':
+                    description: The Order.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Order'

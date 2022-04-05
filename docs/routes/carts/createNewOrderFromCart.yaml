@@ -1,0 +1,18 @@
+paths:
+    /api/carts/order:
+        post:
+            summary: End the cart and create a new order
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+            tags:
+                - Carts
+
+            responses:
+                '201':
+                    description: The order created.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Order'

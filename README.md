@@ -6,6 +6,19 @@ This is my final project for Coderhouse Backend Program.
 
 The goal of this app is provide an APIRestful for selling tickets for events like live shows and football games.
 
+
+## Live API deployed
+
+This API is already deployed on Heroku.
+
+[myTickets]: # URL: https://mytickets-api.herokuapp.com/
+
+## API Documentation
+
+The API is documented using Swagger.
+
+[Documentation]: # URL: https://mytickets-api.herokuapp.com/api-docs
+
 ## Starting server:
 
 The way to start server as pure node is with the following examples:

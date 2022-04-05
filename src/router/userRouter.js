@@ -33,8 +33,11 @@ class UserRouter {
             checkAuthentication,
             this.userController.getHome
         );
-        this.router.get('/logout', this.userController.getLogout);
-        this.router.get('/userimage/:image', this.userController.getImageFile);
+        this.router.get(
+            '/userimage/:image',
+            checkAuthentication,
+            this.userController.getImageFile
+        );
         return this.router;
     }
 }

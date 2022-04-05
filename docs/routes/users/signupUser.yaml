@@ -1,0 +1,19 @@
+paths:
+    /api/users/signup:
+        post:
+            summary: Signup a new user
+            tags:
+                - Users
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/requestBodies/NewSignup'
+            responses:
+                '201':
+                    description: The user created.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'

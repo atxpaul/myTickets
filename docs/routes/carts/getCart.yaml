@@ -1,0 +1,21 @@
+paths:
+    /api/carts:
+        get:
+            summary: Get a Cart from the user in the header jwt
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+                - in: path
+                  name: Cart _id
+                  type: string
+                  required: true
+            tags:
+                - Carts
+            responses:
+                '201':
+                    description: The cart.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Cart'

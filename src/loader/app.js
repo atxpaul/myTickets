@@ -2,6 +2,8 @@ import express from 'express';
 import { engine } from 'express-handlebars';
 import { Server as HttpServer } from 'http';
 import { Server as Socket } from 'socket.io';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 import ProductRouter from '../router/ProductRouter.js';
 import CartRouter from '../router/CartRouter.js';
 import UserRouter from '../router/UserRouter.js';
@@ -22,6 +24,8 @@ const orderRouter = new OrderRouter(express);
 
 const info = getInfo();
 
+const specs = swaggerJsdoc(config.swagger);
+
 app.engine(
     'hbs',
     engine({
@@ -31,6 +35,9 @@ app.engine(
         partialsDir: process.cwd() + '/views/partials/',
     })
 );
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
 app.set('view engine', 'hbs');
 app.set('views', './views');
 app.get('/info', (req, res) => {

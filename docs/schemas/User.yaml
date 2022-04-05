@@ -1,0 +1,19 @@
+# Order
+components:
+    schemas:
+        User:
+            type: object
+            required:
+                - username
+                - jwt
+            properties:
+                username:
+                    type: string
+                    description: Email of the user.
+                jwt:
+                    type: string
+                    description: Token for authentication.
+
+            example:
+                username: test@test.com
+                jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAdGVzdCIsImlkIjoiNjI0Y2JkMzZiZWY3MWMzMDEwNTkwODFiIiwiaWF0IjoxNjQ5MTk2MzQyLCJleHAiOjE2NDkxOTk5NDJ9.BadYUhRynaAmjuJR7OIh1urUr1aYl_K6WbCSBLaITcI
