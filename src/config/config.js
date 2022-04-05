@@ -1,5 +1,9 @@
 import dotenv from 'dotenv';
-dotenv.config();
+if (process.env.NODE_ENV == 'production') {
+    dotenv.config();
+} else {
+    dotenv.config({ path: '.env.test' });
+}
 
 const config = {
     adminMail: process.env.ADMIN_MAIL,
@@ -25,6 +29,10 @@ const config = {
     gmail: {
         sender: process.env.GMAIL_USER,
         password: process.env.GMAIL_PASSWORD,
+    },
+    jwt: {
+        secret: process.env.JWT_SECRET,
+        time: process.env.JWT_TIME,
     },
 };
 export default config;

@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
+import config from '../config/config.js';
 
 function generateToken(user) {
     const token = jwt.sign(
         { username: user.username, id: user._id },
-        process.env.JWT_SECRET,
+        config.jwt.secret,
         {
-            expiresIn: '24h',
+            expiresIn: config.jwt.time,
         }
     );
     return token;

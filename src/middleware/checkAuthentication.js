@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import logger from '../config/logger.js';
+import config from '../config/config.js';
 
 function checkAuthentication(req, res, next) {
     const authHeader = req.headers.authorization;
@@ -12,7 +12,7 @@ function checkAuthentication(req, res, next) {
 
     const token = authHeader.split(' ')[1];
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, config.jwt.secret, (err, decoded) => {
         if (err) {
             return res.status(403).json({
                 error: 'not authorized',
