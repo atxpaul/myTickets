@@ -1,0 +1,23 @@
+paths:
+    /api/carts/decrease:
+        put:
+            summary: Decrease a product from a cart
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+            tags:
+                - Carts
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/requestBodies/NewCart'
+            responses:
+                '201':
+                    description: The updated cart.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Cart'

@@ -1,0 +1,17 @@
+paths:
+    /api/products:
+        get:
+            summary: Get product and by id (optional)
+            parameters:
+                - in: path
+                  name: Product _id
+                  type: string
+            tags:
+                - Products
+            responses:
+                '201':
+                    description: The products (if _id not specified, returns an array).
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Product'

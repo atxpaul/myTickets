@@ -1,0 +1,21 @@
+paths:
+    /api/carts/products:
+        delete:
+            summary: Delete a product from a cart with all the units added before
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+                - in: path
+                  name: Cart _id
+                  type: string
+                  required: true
+            tags:
+                - Carts
+            responses:
+                '201':
+                    description: The updated cart.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Cart'

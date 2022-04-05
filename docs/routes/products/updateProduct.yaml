@@ -1,0 +1,27 @@
+paths:
+    /api/products:
+        put:
+            summary: Update an existing product. Only admin user can update a product
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+                - in: path
+                  name: Product _id
+                  type: string
+                  required: true
+            tags:
+                - Products
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/requestBodies/NewProduct'
+            responses:
+                '201':
+                    description: The updated product.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Product'

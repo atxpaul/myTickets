@@ -1,0 +1,13 @@
+# NewUser
+components:
+    requestBodies:
+        NewCart:
+            type: object
+            required:
+                - _id
+            properties:
+                productId:
+                    type: string
+                    description: ID of the product
+            example:
+                productId: 624b4b42e79bd6d04cea3333

@@ -1,0 +1,23 @@
+paths:
+    /api/products:
+        post:
+            summary: Creates a new product. Only admin user can create a product
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+            tags:
+                - Products
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/requestBodies/NewProduct'
+            responses:
+                '201':
+                    description: The created product.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Product'

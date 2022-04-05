@@ -1,0 +1,19 @@
+# NewUser
+components:
+    requestBodies:
+        NewLogin:
+            type: object
+            required:
+                - username
+                - password
+            properties:
+                username:
+                    type: string
+                    description: The email of the user.
+                password:
+                    type: string
+                    description: The password of the user.
+
+            example:
+                username: test@test.com
+                password: mypassword

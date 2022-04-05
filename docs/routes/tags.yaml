@@ -1,0 +1,9 @@
+tags:
+    - name: Products
+      description: API to manage your products.
+    - name: Carts
+      description: API to manage your carts.
+    - name: Orders
+      description: API to manage your orders.
+    - name: Users
+      description: API to manage your users/customers.

@@ -37,13 +37,6 @@ class UserController {
         res.status(200).json({ user });
     };
 
-    getLogout = async (req, res) => {
-        const { originalUrl, method } = req;
-        logger.info(`Processing request: ${method}-${originalUrl}`);
-        req.session.destroy();
-        res.status(200);
-    };
-
     getImageFile = async (req, res) => {
         const file = req.params.image;
         const pathFile = './uploads/' + file;

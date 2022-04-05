@@ -34,5 +34,16 @@ const config = {
         secret: process.env.JWT_SECRET,
         time: process.env.JWT_TIME,
     },
+    swagger: {
+        definition: {
+            openapi: '3.0.0',
+            info: {
+                title: 'myTickets API with Swagger',
+                description:
+                    'Endpoints and documentation for myTickets API with Swagger',
+            },
+        },
+        apis: ['./docs/**/*.yaml'],
+    },
 };
 export default config;

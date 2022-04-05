@@ -1,0 +1,21 @@
+paths:
+    /api/products:
+        delete:
+            summary: Delete product by id. Only admin user can delete a product
+            parameters:
+                - in: header
+                  name: Authorization
+                  required: true
+                - in: path
+                  name: Product _id
+                  type: string
+                  required: true
+            tags:
+                - Products
+            responses:
+                '201':
+                    description: The product is deleted
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Product'

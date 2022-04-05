@@ -1,0 +1,42 @@
+# Order
+components:
+    schemas:
+        Order:
+            type: object
+            required:
+                - _id
+                - title
+                - price
+                - thumbnail
+            properties:
+                id:
+                    type: string
+                    description: The auto-generated id of the order.
+                customerId:
+                    type: string
+                    description: ID of the user.
+                timestamp:
+                    type: number
+                    description: Data for the cart creation
+                status:
+                    type: string
+                    description: The status of the order.
+                products:
+                    type: array
+                    description: Array of products id and quantities for each.
+                    properties:
+                        productId:
+                            type: string
+                            description: ID of the product
+                        quantity:
+                            type: number
+                            description: Quantity of products for the productId
+
+            example:
+                _id: 624cb8e54cebe056fc689c61
+                customerId: 624cb8e34cebe056fc689c3f
+                status: Pending
+                products:
+                    - productId: 624c770d1a8e38b84ae9ed69
+                    - quantity: 3
+                timestamp: 1649195237469

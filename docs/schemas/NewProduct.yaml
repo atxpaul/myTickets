@@ -1,0 +1,24 @@
+# NewProduct
+components:
+    requestBodies:
+        NewProduct:
+            type: object
+            required:
+                - title
+                - price
+                - thumbnail
+            properties:
+                title:
+                    type: string
+                    description: The title of the product.
+                price:
+                    type: number
+                    description: The price of the product.
+                thumbnail:
+                    type: string
+                    format: binary
+                    description: The URL of the product thumbnail.
+            example:
+                title: desktop computer
+                price: 123.78
+                thumbnail: (file attached)
