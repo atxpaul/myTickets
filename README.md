@@ -11,7 +11,7 @@ The goal of this app is provide an APIRestful for selling tickets for events lik
 
 This API is already deployed on Heroku.
 
-[myTickets](https://myticketsapp.herokuapp.com/)
+[myTickets](https://myticketsapp.herokuapp.com)
 
 ## API Documentation
 
@@ -19,15 +19,12 @@ The API is documented using Swagger.
 
 [Documentation](https://myticketsapp.herokuapp.com/api-docs)
 
-## Starting server:
 
-The way to start server as pure node is with the following examples:
+## Database requirements
 
-Starting with npm script
+This app needs a connection to a MongoDB database. This is configured on the .env or .env.test file. The database needs to be created before running the app. This database can be created in local or MongoDB Atlas.
 
-```sh
-npm start
-```
+The production database running on heroku deployment is created using MongoDB Atlas.
 
 
 ## Testing requeriments
@@ -53,9 +50,10 @@ And finally you can run the tests:
 
     npm test
 
+## Starting server:
 
+In case you need to run the server in production, you will need this environment variables in a .env file:
 
-In case you need to run the server in production, you will need this environment variables:
 
 ```
 ADMIN_MAIL = user@user.com
@@ -66,3 +64,29 @@ JWT_TIME = '1h'
 GMAIL_USER=yourmail@gmail.com
 GMAIL_PASSWORD=yourpasswordforautomaticauthentication
 ```
+
+Also, is necessary set the environment variable NODE_ENV to production.
+
+- In powershell:
+
+
+    $env:NODE_ENV="production"
+
+
+- In bash:
+
+
+    export NODE_ENV="production"
+
+
+The way to start server as pure node is with the following examples:
+
+Starting with npm script
+
+```sh
+npm install
+npm start
+```
+
+
+
