@@ -11,13 +11,13 @@ The goal of this app is provide an APIRestful for selling tickets for events lik
 
 This API is already deployed on Heroku.
 
-[myTickets](https://mytickets-api.herokuapp.com)
+[myTickets](https://myticketsapp.herokuapp.com/)
 
 ## API Documentation
 
 The API is documented using Swagger.
 
-[Documentation](https://mytickets-api.herokuapp.com/api-docs)
+[Documentation](https://myticketsapp.herokuapp.com/api-docs)
 
 ## Starting server:
 
