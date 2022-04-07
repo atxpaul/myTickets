@@ -25,3 +25,11 @@ jobs:
             - run: npm ci
             - run: npm run build --if-present
             - run: npm test
+              env:
+                ADMIN_MAIL: ${{ secrets.ADMIN_MAIL }}
+                GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+                GMAIL_USER: ${{ secrets.GMAIL_USER }}
+                JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                JWT_TIME: ${{ secrets.JWT_TIME }}
+                MONGO_URL: ${{ secrets.MONGO_URL }}
+                SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
